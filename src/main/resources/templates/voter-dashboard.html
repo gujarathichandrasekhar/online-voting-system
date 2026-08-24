@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Voter Dashboard | Online Voting System</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/voter-style.css}">
+
+</head>
+
+<body>
+
+    <main class="page-container">
+
+        <!-- Top navigation -->
+        <header class="topbar">
+
+            <div>
+
+                <h2>🗳️ Online Voting System</h2>
+
+                <p class="subtitle">
+                    Secure Voter Dashboard
+                </p>
+
+            </div>
+
+            <div class="topbar-actions">
+
+                <!--
+                    This link checks whether the administrator
+                    has published the results.
+                -->
+                <a class="btn btn-secondary"
+                   th:href="@{/voter/results}">
+
+                    📊 Results
+
+                </a>
+
+                <form th:action="@{/voter/logout}"
+                      method="post">
+
+                    <button type="submit"
+                            class="btn btn-danger">
+
+                        Logout
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </header>
+
+        <!-- Welcome banner -->
+        <section class="welcome-card">
+
+            <h1>
+
+                Welcome,
+
+                <span th:text="${account.name}">
+                    Voter
+                </span>
+
+            </h1>
+
+            <p>
+
+                Your permanent Voter ID:
+
+                <strong th:text="${account.voterId}">
+                    VOTER-ID
+                </strong>
+
+            </p>
+
+        </section>
+
+        <div class="dashboard-grid">
+
+            <!-- Voter profile -->
+            <section class="dashboard-card">
+
+                <h2>Voter Profile</h2>
+
+                <div class="detail-row">
+
+                    <span>Name</span>
+
+                    <strong th:text="${account.name}">
+                        Voter Name
+                    </strong>
+
+                </div>
+
+                <div class="detail-row">
+
+                    <span>Username</span>
+
+                    <strong th:text="${account.username}">
+                        Username
+                    </strong>
+
+                </div>
+
+                <div class="detail-row">
+
+                    <span>Date of Birth</span>
+
+                    <strong th:text="${account.dateOfBirth}">
+                        Date of Birth
+                    </strong>
+
+                </div>
+
+                <div class="detail-row">
+
+                    <span>Age</span>
+
+                    <strong th:text="${age}">
+                        Age
+                    </strong>
+
+                </div>
+
+                <div class="detail-row">
+
+                    <span>Voter ID</span>
+
+                    <strong th:text="${account.voterId}">
+                        VOTER-ID
+                    </strong>
+
+                </div>
+
+            </section>
+
+            <!-- Assembly election -->
+            <section class="dashboard-card">
+
+                <h2>Assembly Election</h2>
+
+                <span class="status status-active"
+                      th:if="${assemblyActive}">
+
+                    Election Active
+
+                </span>
+
+                <span class="status status-inactive"
+                      th:if="${not assemblyActive}">
+
+                    Election Inactive
+
+                </span>
+
+                <!-- Already voted -->
+                <div th:if="${assemblyVoted}">
+
+                    <span class="status status-voted">
+                        ✓ Vote Submitted
+                    </span>
+
+                    <p class="subtitle">
+
+                        You have already voted in the
+                        Assembly Election.
+
+                    </p>
+
+                </div>
+
+                <!-- Active and not voted -->
+                <a class="btn btn-primary"
+                   th:if="${assemblyActive and not assemblyVoted}"
+                   th:href="@{/voter/vote(electionType='Assembly Election')}">
+
+                    Vote in Assembly Election
+
+                </a>
+
+                <!-- Inactive and not voted -->
+                <p class="subtitle"
+                   th:if="${not assemblyActive and not assemblyVoted}">
+
+                    Voting will be available when the
+                    administrator starts this election.
+
+                </p>
+
+            </section>
+
+            <!-- Lok Sabha election -->
+            <section class="dashboard-card">
+
+                <h2>Lok Sabha Election</h2>
+
+                <span class="status status-active"
+                      th:if="${lokSabhaActive}">
+
+                    Election Active
+
+                </span>
+
+                <span class="status status-inactive"
+                      th:if="${not lokSabhaActive}">
+
+                    Election Inactive
+
+                </span>
+
+                <!-- Already voted -->
+                <div th:if="${lokSabhaVoted}">
+
+                    <span class="status status-voted">
+                        ✓ Vote Submitted
+                    </span>
+
+                    <p class="subtitle">
+
+                        You have already voted in the
+                        Lok Sabha Election.
+
+                    </p>
+
+                </div>
+
+                <!-- Active and not voted -->
+                <a class="btn btn-primary"
+                   th:if="${lokSabhaActive and not lokSabhaVoted}"
+                   th:href="@{/voter/vote(electionType='Lok Sabha Election')}">
+
+                    Vote in Lok Sabha Election
+
+                </a>
+
+                <!-- Inactive and not voted -->
+                <p class="subtitle"
+                   th:if="${not lokSabhaActive and not lokSabhaVoted}">
+
+                    Voting will be available when the
+                    administrator starts this election.
+
+                </p>
+
+            </section>
+
+            <!-- Results information -->
+            <section class="dashboard-card">
+
+                <h2>Election Results</h2>
+
+                <p class="subtitle">
+
+                    Results and winner details will be available
+                    only after the administrator officially
+                    publishes them.
+
+                </p>
+
+                <div class="topbar-actions"
+                     style="margin-top:18px;">
+
+                    <a class="btn btn-secondary"
+                       th:href="@{/voter/results}">
+
+                        📊 Check Results
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

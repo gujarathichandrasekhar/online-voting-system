@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Voter Login | Online Voting System</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/voter-style.css}">
+
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-card">
+
+        <!-- Logo and heading -->
+        <div class="brand">
+
+            <div class="brand-icon">
+                🗳️
+            </div>
+
+            <h1>Voter Login</h1>
+
+            <p class="subtitle">
+                Login with the username and password
+                created during voter registration.
+            </p>
+
+        </div>
+
+        <!-- Registration success message -->
+        <div class="alert alert-success"
+             th:if="${success}"
+             th:text="${success}">
+        </div>
+
+        <!-- Generated voter ID -->
+        <div class="alert alert-success"
+             th:if="${registeredVoterId}">
+
+            Your permanent Voter ID is:
+
+            <strong th:text="${registeredVoterId}">
+                VOTER-ID
+            </strong>
+
+        </div>
+
+        <!-- Login error message -->
+        <div class="alert alert-error"
+             th:if="${msg}"
+             th:text="${msg}">
+        </div>
+
+        <!-- Voter login form -->
+        <form th:action="@{/voter/login}"
+              method="post">
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input type="text"
+                       id="username"
+                       name="username"
+                       th:value="${username}"
+                       placeholder="Enter your username"
+                       minlength="4"
+                       maxlength="30"
+                       autocomplete="username"
+                       required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input type="password"
+                       id="password"
+                       name="password"
+                       placeholder="Enter your password"
+                       autocomplete="current-password"
+                       required>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                👤 Login to Voter Dashboard
+
+            </button>
+
+        </form>
+
+        <!-- New voter registration -->
+        <div class="auth-link">
+
+            Not registered?
+
+            <a th:href="@{/voter/register}">
+                Create New Voter Account
+            </a>
+
+        </div>
+
+        <!-- Separation line -->
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin:24px 0 5px;
+            color:#98a2b3;
+            font-size:12px;
+        ">
+
+            <span style="
+                flex:1;
+                height:1px;
+                background:#dce3ed;
+            ">
+            </span>
+
+            <span>ADMIN ACCESS</span>
+
+            <span style="
+                flex:1;
+                height:1px;
+                background:#dce3ed;
+            ">
+            </span>
+
+        </div>
+
+        <!-- Admin login -->
+        <a th:href="@{/admin}"
+           class="btn btn-secondary"
+           style="
+               width:100%;
+               margin-top:15px;
+           ">
+
+            🔐 Admin Login
+
+        </a>
+
+        <p class="subtitle"
+           style="
+               margin-top:13px;
+               text-align:center;
+           ">
+
+            Administrator access is separate from voter login.
+
+        </p>
+
+    </main>
+
+</body>
+
+</html>

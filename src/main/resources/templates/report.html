@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Election Results | Online Voting System</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            font-family: "Poppins", sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #312e81,
+                    #4c1d95,
+                    #0369a1
+                );
+
+            padding: 25px 15px;
+
+            color: #1e1b4b;
+
+            overflow-x: hidden;
+
+            position: relative;
+        }
+
+
+        /* =========================
+           BACKGROUND
+        ========================= */
+
+        body::before,
+        body::after {
+
+            content: "";
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            z-index: 0;
+
+            pointer-events: none;
+
+            animation:
+                floating 8s ease-in-out infinite;
+        }
+
+        body::before {
+
+            width: 350px;
+
+            height: 350px;
+
+            top: -150px;
+
+            left: -100px;
+        }
+
+        body::after {
+
+            width: 450px;
+
+            height: 450px;
+
+            bottom: -220px;
+
+            right: -130px;
+
+            animation-delay: 2s;
+        }
+
+
+        @keyframes floating {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+
+            width: 100%;
+
+            max-width: 1000px;
+
+            margin: auto;
+
+            padding: 25px;
+
+            background:
+                rgba(255,255,255,0.97);
+
+            border-radius: 22px;
+
+            position: relative;
+
+            z-index: 2;
+
+            box-shadow:
+                0 25px 60px
+                rgba(0,0,0,0.35);
+
+            animation:
+                containerAppear 0.8s ease;
+        }
+
+
+        @keyframes containerAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(30px)
+                    scale(0.97);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header-icon {
+
+            width: 60px;
+
+            height: 60px;
+
+            margin: 0 auto 8px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 28px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb,
+                    #06b6d4
+                );
+
+            box-shadow:
+                0 8px 22px
+                rgba(37,99,235,0.35);
+
+            animation:
+                iconFloat 2.5s ease-in-out infinite;
+        }
+
+
+        @keyframes iconFloat {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            color: #312e81;
+
+            font-size: 25px;
+
+            font-weight: 800;
+
+            margin-bottom: 3px;
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 11px;
+
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           FILTER
+        ========================= */
+
+        .filter-box {
+
+            padding: 15px;
+
+            margin-bottom: 12px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef2ff
+                );
+
+            border:
+                1px solid #c4b5fd;
+
+            box-shadow:
+                0 6px 18px
+                rgba(79,70,229,0.10);
+        }
+
+
+        .filter-title {
+
+            text-align: center;
+
+            color: #312e81;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+
+        .filter-form {
+
+            display: flex;
+
+            gap: 10px;
+
+            align-items: end;
+
+            flex-wrap: wrap;
+        }
+
+
+        .form-group {
+
+            flex: 1;
+
+            min-width: 200px;
+        }
+
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #475569;
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+
+        .form-group select {
+
+            width: 100%;
+
+            padding: 9px 11px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            background: white;
+
+            color: #334155;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 11px;
+
+            outline: none;
+
+            cursor: pointer;
+        }
+
+
+        .form-group select:focus {
+
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(99,102,241,0.12);
+        }
+
+
+        .view-button {
+
+            border: none;
+
+            padding: 9px 18px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 6px 15px
+                rgba(79,70,229,0.30);
+
+            transition: 0.3s;
+        }
+
+
+        .view-button:hover {
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* =========================
+           SELECTED INFORMATION
+        ========================= */
+
+        .election-info {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .info-card {
+
+            flex: 1;
+
+            min-width: 200px;
+
+            padding: 12px;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ede9fe,
+                    #dbeafe
+                );
+
+            border:
+                1px solid #c4b5fd;
+        }
+
+
+        .info-label {
+
+            display: block;
+
+            color: #64748b;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            margin-bottom: 3px;
+
+            text-transform: uppercase;
+        }
+
+
+        .info-value {
+
+            color: #312e81;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            word-break: break-word;
+        }
+
+
+        /* =========================
+           TOTAL VOTES
+        ========================= */
+
+        .total-box {
+
+            text-align: center;
+
+            padding: 12px;
+
+            margin-bottom: 10px;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ede9fe,
+                    #dbeafe
+                );
+
+            border:
+                1px solid #c4b5fd;
+        }
+
+
+        .total-label {
+
+            color: #64748b;
+
+            font-size: 10px;
+
+            font-weight: 600;
+        }
+
+
+        .total-number {
+
+            display: block;
+
+            margin-top: 2px;
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            color: #4f46e5;
+        }
+
+
+        /* =========================
+           WINNER
+        ========================= */
+
+        .winner-box {
+
+            text-align: center;
+
+            margin-bottom: 10px;
+
+            padding: 15px;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fef3c7,
+                    #fef9c3,
+                    #dcfce7
+                );
+
+            border:
+                1px solid #fde68a;
+
+            box-shadow:
+                0 8px 20px
+                rgba(245,158,11,0.12);
+        }
+
+
+        .winner-icon {
+
+            font-size: 25px;
+
+            margin-bottom: 3px;
+        }
+
+
+        .winner-title {
+
+            font-size: 9px;
+
+            color: #64748b;
+
+            font-weight: 700;
+
+            margin-bottom: 3px;
+
+            text-transform: uppercase;
+        }
+
+
+        .winner-name {
+
+            font-size: 19px;
+
+            font-weight: 800;
+
+            color: #059669;
+
+            word-break: break-word;
+        }
+
+
+        /* =========================
+           SECTION TITLE
+        ========================= */
+
+        .section-title {
+
+            text-align: center;
+
+            color: #312e81;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            margin-top: 5px;
+
+            margin-bottom: 6px;
+        }
+
+
+        /* =========================
+           RESULTS TABLE
+        ========================= */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+
+            border-radius: 11px;
+
+            box-shadow:
+                0 6px 18px
+                rgba(30,41,59,0.10);
+
+            margin-bottom: 7px;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+
+        th {
+
+            padding: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #312e81,
+                    #4f46e5
+                );
+
+            color: white;
+
+            font-size: 11px;
+
+            text-align: left;
+        }
+
+
+        td {
+
+            padding: 8px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            font-size: 11px;
+
+            color: #334155;
+
+            background: white;
+        }
+
+
+        tr:hover td {
+
+            background: #f5f3ff;
+        }
+
+
+        .party {
+
+            display: inline-block;
+
+            padding: 4px 9px;
+
+            border-radius: 20px;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            background: #ede9fe;
+
+            color: #4c1d95;
+        }
+
+
+        .vote-number {
+
+            font-weight: 700;
+
+            color: #4f46e5;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           NO RESULTS
+        ========================= */
+
+        .no-results {
+
+            text-align: center;
+
+            padding: 20px;
+
+            color: #64748b;
+
+            background: white;
+
+            border-radius: 12px;
+
+            margin-bottom: 10px;
+
+            border:
+                1px solid #e2e8f0;
+        }
+
+
+        .no-results-icon {
+
+            font-size: 28px;
+
+            margin-bottom: 6px;
+        }
+
+
+        /* =========================
+           CHART
+        ========================= */
+
+        .chart-title {
+
+            text-align: center;
+
+            color: #312e81;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            margin-top: 5px;
+
+            margin-bottom: 6px;
+        }
+
+
+        .chart-box {
+
+            width: 100%;
+
+            height: 300px;
+
+            padding: 12px;
+
+            background: #f8fafc;
+
+            border-radius: 14px;
+
+            border:
+                1px solid #e2e8f0;
+
+            margin-top: 0;
+
+            margin-bottom: 10px;
+
+            position: relative;
+        }
+
+
+        #voteChart {
+
+            width: 100% !important;
+
+            height: 100% !important;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 9px 17px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+
+            box-shadow:
+                0 6px 15px
+                rgba(79,70,229,0.30);
+
+            transition: 0.3s;
+        }
+
+
+        .button:hover {
+
+            transform:
+                translateY(-2px);
+
+            color: white;
+        }
+
+
+        .secondary {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #475569,
+                    #334155
+                );
+        }
+
+
+        .winner-button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f59e0b,
+                    #ea580c
+                );
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 10px;
+
+            color: #94a3b8;
+
+            font-size: 9px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 12px 8px;
+            }
+
+
+            .container {
+
+                padding: 18px 12px;
+
+                border-radius: 18px;
+            }
+
+
+            h1 {
+
+                font-size: 21px;
+            }
+
+
+            .header-icon {
+
+                width: 55px;
+
+                height: 55px;
+
+                font-size: 25px;
+            }
+
+
+            .filter-form {
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .form-group {
+
+                min-width: 100%;
+            }
+
+
+            .view-button {
+
+                width: 100%;
+            }
+
+
+            .election-info {
+
+                flex-direction: column;
+            }
+
+
+            .info-card {
+
+                min-width: 100%;
+            }
+
+
+            .chart-box {
+
+                height: 260px;
+
+                padding: 5px;
+
+                margin-bottom: 8px;
+            }
+
+
+            th,
+            td {
+
+                padding: 7px;
+
+                font-size: 10px;
+            }
+
+
+            .total-number {
+
+                font-size: 25px;
+            }
+
+
+            .winner-name {
+
+                font-size: 18px;
+            }
+
+
+            .buttons {
+
+                margin-top: 7px;
+
+                gap: 7px;
+            }
+
+
+            .button {
+
+                padding: 8px 13px;
+
+                font-size: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header-icon">
+        📊
+    </div>
+
+
+    <h1>
+        State-wise Election Results
+    </h1>
+
+
+    <p class="subtitle">
+        View election results by state and election type
+    </p>
+
+
+    <!-- =========================
+         FILTER
+    ========================= -->
+
+    <div class="filter-box">
+
+        <div class="filter-title">
+            🔎 Select Election
+        </div>
+
+
+        <form
+                class="filter-form"
+                method="get"
+                action="/report">
+
+
+            <!-- STATE -->
+
+            <div class="form-group">
+
+                <label for="state">
+                    State
+                </label>
+
+
+                <select
+                        id="state"
+                        name="state"
+                        required>
+
+                    <option value="">
+                        Select State
+                    </option>
+
+
+                    <option value="Andhra Pradesh"
+                            th:selected="${state == 'Andhra Pradesh'}">
+                        Andhra Pradesh
+                    </option>
+
+                    <option value="Arunachal Pradesh"
+                            th:selected="${state == 'Arunachal Pradesh'}">
+                        Arunachal Pradesh
+                    </option>
+
+                    <option value="Assam"
+                            th:selected="${state == 'Assam'}">
+                        Assam
+                    </option>
+
+                    <option value="Bihar"
+                            th:selected="${state == 'Bihar'}">
+                        Bihar
+                    </option>
+
+                    <option value="Chhattisgarh"
+                            th:selected="${state == 'Chhattisgarh'}">
+                        Chhattisgarh
+                    </option>
+
+                    <option value="Goa"
+                            th:selected="${state == 'Goa'}">
+                        Goa
+                    </option>
+
+                    <option value="Gujarat"
+                            th:selected="${state == 'Gujarat'}">
+                        Gujarat
+                    </option>
+
+                    <option value="Haryana"
+                            th:selected="${state == 'Haryana'}">
+                        Haryana
+                    </option>
+
+                    <option value="Himachal Pradesh"
+                            th:selected="${state == 'Himachal Pradesh'}">
+                        Himachal Pradesh
+                    </option>
+
+                    <option value="Jharkhand"
+                            th:selected="${state == 'Jharkhand'}">
+                        Jharkhand
+                    </option>
+
+                    <option value="Karnataka"
+                            th:selected="${state == 'Karnataka'}">
+                        Karnataka
+                    </option>
+
+                    <option value="Kerala"
+                            th:selected="${state == 'Kerala'}">
+                        Kerala
+                    </option>
+
+                    <option value="Madhya Pradesh"
+                            th:selected="${state == 'Madhya Pradesh'}">
+                        Madhya Pradesh
+                    </option>
+
+                    <option value="Maharashtra"
+                            th:selected="${state == 'Maharashtra'}">
+                        Maharashtra
+                    </option>
+
+                    <option value="Manipur"
+                            th:selected="${state == 'Manipur'}">
+                        Manipur
+                    </option>
+
+                    <option value="Meghalaya"
+                            th:selected="${state == 'Meghalaya'}">
+                        Meghalaya
+                    </option>
+
+                    <option value="Mizoram"
+                            th:selected="${state == 'Mizoram'}">
+                        Mizoram
+                    </option>
+
+                    <option value="Nagaland"
+                            th:selected="${state == 'Nagaland'}">
+                        Nagaland
+                    </option>
+
+                    <option value="Odisha"
+                            th:selected="${state == 'Odisha'}">
+                        Odisha
+                    </option>
+
+                    <option value="Punjab"
+                            th:selected="${state == 'Punjab'}">
+                        Punjab
+                    </option>
+
+                    <option value="Rajasthan"
+                            th:selected="${state == 'Rajasthan'}">
+                        Rajasthan
+                    </option>
+
+                    <option value="Sikkim"
+                            th:selected="${state == 'Sikkim'}">
+                        Sikkim
+                    </option>
+
+                    <option value="Tamil Nadu"
+                            th:selected="${state == 'Tamil Nadu'}">
+                        Tamil Nadu
+                    </option>
+
+                    <option value="Telangana"
+                            th:selected="${state == 'Telangana'}">
+                        Telangana
+                    </option>
+
+                    <option value="Tripura"
+                            th:selected="${state == 'Tripura'}">
+                        Tripura
+                    </option>
+
+                    <option value="Uttar Pradesh"
+                            th:selected="${state == 'Uttar Pradesh'}">
+                        Uttar Pradesh
+                    </option>
+
+                    <option value="Uttarakhand"
+                            th:selected="${state == 'Uttarakhand'}">
+                        Uttarakhand
+                    </option>
+
+                    <option value="West Bengal"
+                            th:selected="${state == 'West Bengal'}">
+                        West Bengal
+                    </option>
+
+                    <option value="Delhi"
+                            th:selected="${state == 'Delhi'}">
+                        Delhi
+                    </option>
+
+                    <option value="Jammu and Kashmir"
+                            th:selected="${state == 'Jammu and Kashmir'}">
+                        Jammu and Kashmir
+                    </option>
+
+                    <option value="Ladakh"
+                            th:selected="${state == 'Ladakh'}">
+                        Ladakh
+                    </option>
+
+                    <option value="Puducherry"
+                            th:selected="${state == 'Puducherry'}">
+                        Puducherry
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ELECTION TYPE -->
+
+            <div class="form-group">
+
+                <label for="electionType">
+                    Election Type
+                </label>
+
+
+                <select
+                        id="electionType"
+                        name="electionType"
+                        required>
+
+                    <option value="">
+                        Select Election Type
+                    </option>
+
+
+                    <option value="Assembly Election"
+                            th:selected="${electionType == 'Assembly Election'}">
+                        Assembly Election
+                    </option>
+
+
+                    <option value="Lok Sabha Election"
+                            th:selected="${electionType == 'Lok Sabha Election'}">
+                        Lok Sabha Election
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button
+                    type="submit"
+                    class="view-button">
+
+                🔍 View Results
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================
+         SELECTED INFORMATION
+    ========================= -->
+
+    <div class="election-info">
+
+
+        <div class="info-card">
+
+            <span class="info-label">
+                Selected State
+            </span>
+
+
+            <span
+                    class="info-value"
+                    th:text="${state != null && !#strings.isEmpty(state)
+                              ? state
+                              : 'Not Selected'}">
+
+                Not Selected
+
+            </span>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <span class="info-label">
+                Election Type
+            </span>
+
+
+            <span
+                    class="info-value"
+                    th:text="${electionType != null && !#strings.isEmpty(electionType)
+                              ? electionType
+                              : 'Not Selected'}">
+
+                Not Selected
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TOTAL VOTES
+    ========================= -->
+
+    <div class="total-box">
+
+        <span class="total-label">
+            TOTAL VOTES CAST
+        </span>
+
+
+        <span
+                class="total-number"
+                th:text="${total != null ? total : 0}">
+
+            0
+
+        </span>
+
+    </div>
+
+
+    <!-- =========================
+         WINNER
+    ========================= -->
+
+    <div
+            class="winner-box"
+            th:if="${state != null && !#strings.isEmpty(state)
+                    && electionType != null && !#strings.isEmpty(electionType)}">
+
+
+        <div class="winner-icon">
+            🏆
+        </div>
+
+
+        <div class="winner-title">
+            Current Winner
+        </div>
+
+
+        <div
+                class="winner-name"
+                th:text="${winner != null && !#strings.isEmpty(winner)
+                          ? winner
+                          : 'No Winner Yet'}">
+
+            No Winner Yet
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         RESULTS TABLE
+    ========================= -->
+
+    <div
+            th:if="${results != null && !results.isEmpty()}">
+
+
+        <div class="section-title">
+            🗳️ Party-wise Results
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        Party
+                    </th>
+
+                    <th>
+                        Votes
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr th:each="entry : ${results}">
+
+                    <td>
+
+                        <span
+                                class="party"
+                                th:text="${entry.key}">
+
+                            Party
+
+                        </span>
+
+                    </td>
+
+
+                    <td
+                            class="vote-number"
+                            th:text="${entry.value}">
+
+                        0
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         NO RESULTS
+    ========================= -->
+
+    <div
+            class="no-results"
+            th:if="${results == null || results.isEmpty()}">
+
+
+        <div class="no-results-icon">
+            📊
+        </div>
+
+
+        <div>
+
+            <span
+                    th:if="${state == null || #strings.isEmpty(state)
+                            || electionType == null || #strings.isEmpty(electionType)}">
+
+                Please select a state and election type
+                to view the results.
+
+            </span>
+
+
+            <span
+                    th:if="${state != null && !#strings.isEmpty(state)
+                            && electionType != null && !#strings.isEmpty(electionType)}">
+
+                No votes found for the selected
+                state and election type.
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CHART
+    ========================= -->
+
+    <div
+            th:if="${results != null && !results.isEmpty()}">
+
+
+        <div class="chart-title">
+
+            📈 Party-wise Vote Comparison
+
+        </div>
+
+
+        <div class="chart-box">
+
+            <canvas id="voteChart"></canvas>
+
+        </div>
+
+
+        <!--
+            IMPORTANT:
+            Thymeleaf creates these elements.
+            JavaScript reads their data attributes.
+            This avoids the previous Map/JSON problem.
+        -->
+
+        <div id="chartDataContainer"
+             style="display:none;">
+
+            <div
+                    class="chart-data"
+                    th:each="entry : ${results}"
+                    th:attr="data-party=${entry.key},
+                             data-votes=${entry.value}">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         BUTTONS
+    ========================= -->
+
+    <div class="buttons">
+
+
+        <a
+                href="/"
+                class="button">
+
+            🏠 Home
+
+        </a>
+
+
+        <a
+                href="/search"
+                class="button secondary">
+
+            🔍 Search Voters
+
+        </a>
+
+
+        <a
+                th:if="${state != null && !#strings.isEmpty(state)
+                        && electionType != null && !#strings.isEmpty(electionType)}"
+
+                th:href="@{/winner(state=${state},electionType=${electionType})}"
+
+                class="button winner-button">
+
+            🏆 Winner
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <div class="footer">
+
+        🔒 Online Voting System • Transparent Election Results
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     CHART JAVASCRIPT
+     ===================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    console.log("=================================");
+    console.log("Election Result Chart Started");
+    console.log("=================================");
+
+
+    /* -----------------------------------------
+       GET CANVAS
+    ----------------------------------------- */
+
+    const chartElement =
+        document.getElementById("voteChart");
+
+
+    if (!chartElement) {
+
+        console.log("Chart canvas not found.");
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       CHECK CHART.JS
+    ----------------------------------------- */
+
+    if (typeof Chart === "undefined") {
+
+        console.error(
+            "Chart.js is not loaded."
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       GET THYMELEAF CHART DATA
+    ----------------------------------------- */
+
+    const chartDataElements =
+        document.querySelectorAll(".chart-data");
+
+
+    console.log(
+        "Chart data elements:",
+        chartDataElements.length
+    );
+
+
+    /* -----------------------------------------
+       CREATE ARRAYS
+    ----------------------------------------- */
+
+    const partyLabels = [];
+
+    const voteValues = [];
+
+
+    chartDataElements.forEach(function (element) {
+
+        const party =
+            element.getAttribute("data-party");
+
+        const votes =
+            element.getAttribute("data-votes");
+
+
+        if (
+            party !== null &&
+            party.trim() !== ""
+        ) {
+
+            partyLabels.push(
+                party
+            );
+
+
+            voteValues.push(
+                Number(votes)
+            );
+
+        }
+
+    });
+
+
+    /* -----------------------------------------
+       DEBUG
+    ----------------------------------------- */
+
+    console.log(
+        "Party Labels:",
+        partyLabels
+    );
+
+    console.log(
+        "Vote Values:",
+        voteValues
+    );
+
+
+    /* -----------------------------------------
+       NO DATA
+    ----------------------------------------- */
+
+    if (
+        partyLabels.length === 0 ||
+        voteValues.length === 0
+    ) {
+
+        console.log(
+            "No chart data available."
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       DESTROY OLD CHART
+       IF ANY
+    ----------------------------------------- */
+
+    if (
+        window.electionVoteChart
+    ) {
+
+        window.electionVoteChart.destroy();
+
+    }
+
+
+    /* -----------------------------------------
+       PARTY COLORS
+    ----------------------------------------- */
+
+    const partyColors = [
+
+        "#f97316",
+
+        "#eab308",
+
+        "#22c55e",
+
+        "#ef4444",
+
+        "#2563eb",
+
+        "#8b5cf6",
+
+        "#06b6d4",
+
+        "#ec4899",
+
+        "#14b8a6",
+
+        "#f43f5e"
+
+    ];
+
+
+    /* -----------------------------------------
+       CREATE CHART
+    ----------------------------------------- */
+
+    window.electionVoteChart =
+        new Chart(
+
+            chartElement,
+
+            {
+
+                type: "bar",
+
+
+                data: {
+
+                    labels:
+                        partyLabels,
+
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Votes",
+
+
+                            data:
+                                voteValues,
+
+
+                            backgroundColor:
+                                partyLabels.map(
+                                    function (
+                                        party,
+                                        index
+                                    ) {
+
+                                        return partyColors[
+                                            index %
+                                            partyColors.length
+                                        ];
+
+                                    }
+                                ),
+
+
+                            borderColor:
+                                partyLabels.map(
+                                    function (
+                                        party,
+                                        index
+                                    ) {
+
+                                        return partyColors[
+                                            index %
+                                            partyColors.length
+                                        ];
+
+                                    }
+                                ),
+
+
+                            borderWidth: 1,
+
+
+                            borderRadius: 7,
+
+
+                            borderSkipped:
+                                false
+
+                        }
+
+                    ]
+
+                },
+
+
+                options: {
+
+                    responsive: true,
+
+
+                    maintainAspectRatio:
+                        false,
+
+
+                    animation: {
+
+                        duration: 800
+
+                    },
+
+
+                    plugins: {
+
+                        legend: {
+
+                            display: false
+
+                        },
+
+
+                        tooltip: {
+
+                            backgroundColor:
+                                "#1e1b4b",
+
+
+                            padding: 10,
+
+
+                            cornerRadius: 8,
+
+
+                            displayColors:
+                                true,
+
+
+                            callbacks: {
+
+                                title:
+                                    function (
+                                        context
+                                    ) {
+
+                                        return context[0]
+                                            .label;
+
+                                    },
+
+
+                                label:
+                                    function (
+                                        context
+                                    ) {
+
+                                        return (
+                                            " Votes: " +
+                                            context.raw
+                                        );
+
+                                    }
+
+                            }
+
+                        }
+
+                    },
+
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero:
+                                true,
+
+
+                            ticks: {
+
+                                precision:
+                                    0,
+
+
+                                stepSize:
+                                    1,
+
+
+                                color:
+                                    "#64748b",
+
+
+                                font: {
+
+                                    family:
+                                        "Poppins",
+
+                                    size:
+                                        10
+
+                                }
+
+                            },
+
+
+                            grid: {
+
+                                color:
+                                    "rgba(100,116,139,0.12)"
+
+                            }
+
+                        },
+
+
+                        x: {
+
+                            ticks: {
+
+                                color:
+                                    "#334155",
+
+
+                                autoSkip:
+                                    false,
+
+
+                                maxRotation:
+                                    25,
+
+
+                                minRotation:
+                                    0,
+
+
+                                font: {
+
+                                    family:
+                                        "Poppins",
+
+                                    weight:
+                                        "600",
+
+                                    size:
+                                        9
+
+                                },
+
+
+                                callback:
+                                    function (
+                                        value
+                                    ) {
+
+                                        const label =
+                                            this.getLabelForValue(
+                                                value
+                                            );
+
+
+                                        if (
+                                            !label
+                                        ) {
+
+                                            return "";
+
+                                        }
+
+
+                                        if (
+                                            label.length <=
+                                            14
+                                        ) {
+
+                                            return label;
+
+                                        }
+
+
+                                        return (
+                                            label.substring(
+                                                0,
+                                                14
+                                            ) +
+                                            "..."
+                                        );
+
+                                    }
+
+                            },
+
+
+                            grid: {
+
+                                display:
+                                    false
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+    console.log(
+        "Bar chart created successfully."
+    );
+
+});
+
+</script>
+
+
+</body>
+
+</html>

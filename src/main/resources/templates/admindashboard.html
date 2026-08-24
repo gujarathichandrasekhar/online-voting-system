@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Online Voting System</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+
+            color: #ffffff;
+
+            font-family: "Poppins", sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #312e81,
+                #581c87,
+                #0e7490
+            );
+
+            background-size: 300% 300%;
+
+            animation: backgroundMove 12s ease infinite;
+
+            overflow-x: hidden;
+        }
+
+        @keyframes backgroundMove {
+
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* ===============================================
+           BACKGROUND BUBBLES
+           =============================================== */
+
+        .bubble {
+            position: fixed;
+
+            z-index: 0;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            filter: blur(2px);
+        }
+
+        .bubble1 {
+            width: 280px;
+            height: 280px;
+
+            top: -100px;
+            left: -80px;
+
+            background: rgba(168, 85, 247, 0.20);
+
+            animation: bubbleOne 8s ease-in-out infinite;
+        }
+
+        .bubble2 {
+            width: 350px;
+            height: 350px;
+
+            right: -120px;
+            bottom: -150px;
+
+            background: rgba(6, 182, 212, 0.18);
+
+            animation: bubbleTwo 10s ease-in-out infinite;
+        }
+
+        .bubble3 {
+            width: 150px;
+            height: 150px;
+
+            top: 10%;
+            right: 25%;
+
+            background: rgba(236, 72, 153, 0.16);
+
+            animation: bubbleThree 6s ease-in-out infinite;
+        }
+
+        @keyframes bubbleOne {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(50px, 40px);
+            }
+        }
+
+        @keyframes bubbleTwo {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-40px, -50px);
+            }
+        }
+
+        @keyframes bubbleThree {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-35px);
+            }
+        }
+
+        /* ===============================================
+           ADMIN LOGOUT
+           =============================================== */
+
+        .logout-form {
+            position: fixed;
+
+            top: 20px;
+            right: 25px;
+
+            z-index: 10;
+        }
+
+        .logout-button {
+            padding: 10px 18px;
+
+            color: #991b1b;
+
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+
+            border: none;
+            border-radius: 30px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .logout-button:hover {
+            color: white;
+
+            background: #dc2626;
+
+            transform: translateY(-3px);
+        }
+
+        /* ===============================================
+           MAIN DASHBOARD
+           =============================================== */
+
+        .dashboard {
+            position: relative;
+
+            z-index: 2;
+
+            width: 100%;
+            max-width: 1150px;
+
+            margin: auto;
+            padding: 70px 25px;
+        }
+
+        /* ===============================================
+           HEADER
+           =============================================== */
+
+        .header {
+            margin-bottom: 35px;
+
+            text-align: center;
+
+            animation: headerAppear 1s ease;
+        }
+
+        .admin-icon {
+            width: 85px;
+            height: 85px;
+
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 40px;
+
+            border-radius: 50%;
+
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6,
+                #ec4899
+            );
+
+            box-shadow:
+                0 0 0 10px rgba(139, 92, 246, 0.10),
+                0 15px 40px rgba(139, 92, 246, 0.40);
+
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .header h1 {
+            margin-top: 20px;
+
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            margin-top: 8px;
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+        }
+
+        @keyframes headerAppear {
+
+            from {
+                opacity: 0;
+
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform: translateY(0);
+            }
+        }
+
+        /* ===============================================
+           SUCCESS MESSAGE
+           =============================================== */
+
+        .success-message {
+            width: min(650px, 100%);
+
+            margin: 0 auto 28px;
+            padding: 13px 18px;
+
+            color: #065f46;
+
+            font-size: 13px;
+            font-weight: 650;
+            text-align: center;
+
+            border: 1px solid #86efac;
+            border-radius: 12px;
+
+            background: rgba(220, 252, 231, 0.96);
+
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
+        }
+
+        /* ===============================================
+           DASHBOARD GRID
+           =============================================== */
+
+        .dashboard-grid {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+        /* ===============================================
+           DASHBOARD CARDS
+           =============================================== */
+
+        .dashboard-card {
+            position: relative;
+
+            overflow: hidden;
+
+            min-height: 230px;
+            padding: 30px 22px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+
+            text-align: center;
+            text-decoration: none;
+
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 25px;
+
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+
+            transition:
+                transform 0.4s ease,
+                box-shadow 0.4s ease;
+
+            animation: cardAppear 0.8s ease both;
+        }
+
+        .dashboard-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .dashboard-card:nth-child(2) {
+            animation-delay: 0.35s;
+        }
+
+        .dashboard-card:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+
+        .dashboard-card:nth-child(4) {
+            animation-delay: 0.65s;
+        }
+
+        .dashboard-card:nth-child(5) {
+            animation-delay: 0.8s;
+        }
+
+        .dashboard-card:nth-child(6) {
+            animation-delay: 0.95s;
+        }
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(50px)
+                    scale(0.90);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+        .dashboard-card:hover {
+            transform:
+                translateY(-10px)
+                scale(1.025);
+
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ===============================================
+           CARD COLOURS
+           =============================================== */
+
+        .search-card {
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5,
+                #7c3aed
+            );
+        }
+
+        .voter-card {
+            background: linear-gradient(
+                135deg,
+                #059669,
+                #10b981,
+                #14b8a6
+            );
+        }
+
+        .report-card {
+            background: linear-gradient(
+                135deg,
+                #d97706,
+                #f59e0b,
+                #f97316
+            );
+        }
+
+        .winner-card {
+            background: linear-gradient(
+                135deg,
+                #dc2626,
+                #e11d48,
+                #db2777
+            );
+        }
+
+        .election-card {
+            background: linear-gradient(
+                135deg,
+                #0891b2,
+                #06b6d4,
+                #2563eb
+            );
+        }
+
+        .publication-card {
+            background: linear-gradient(
+                135deg,
+                #4338ca,
+                #7c3aed,
+                #c026d3
+            );
+        }
+
+        /* ===============================================
+           CARD SHINE
+           =============================================== */
+
+        .dashboard-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 150px;
+            height: 400px;
+
+            top: -100px;
+            left: -180px;
+
+            background: rgba(255, 255, 255, 0.20);
+
+            transform: rotate(25deg);
+
+            transition: 0.8s;
+        }
+
+        .dashboard-card:hover::before {
+            left: 120%;
+        }
+
+        /* ===============================================
+           CARD CONTENT
+           =============================================== */
+
+        .card-icon {
+            width: 75px;
+            height: 75px;
+
+            margin-bottom: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 35px;
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+
+            background: rgba(255, 255, 255, 0.18);
+
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+            transition: 0.4s;
+        }
+
+        .dashboard-card:hover .card-icon {
+            transform:
+                rotate(-8deg)
+                scale(1.12);
+        }
+
+        .dashboard-card h2 {
+            margin-bottom: 8px;
+
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+        .dashboard-card p {
+            color: rgba(255, 255, 255, 0.84);
+
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .arrow {
+            margin-top: 18px;
+
+            font-size: 20px;
+
+            opacity: 0.7;
+
+            transition: 0.3s;
+        }
+
+        .dashboard-card:hover .arrow {
+            opacity: 1;
+
+            transform: translateX(8px);
+        }
+
+        /* ===============================================
+           RESULT PUBLICATION CONTROL
+           =============================================== */
+
+        .publication-status {
+            margin: 10px 0 14px;
+            padding: 7px 12px;
+
+            font-size: 11px;
+            font-weight: 750;
+
+            border-radius: 25px;
+        }
+
+        .published-status {
+            color: #065f46;
+
+            background: #dcfce7;
+        }
+
+        .hidden-status {
+            color: #991b1b;
+
+            background: #fee2e2;
+        }
+
+        .publication-form {
+            position: relative;
+
+            z-index: 3;
+
+            width: 100%;
+
+            margin-top: 8px;
+        }
+
+        .publication-button {
+            width: 100%;
+            min-height: 43px;
+            padding: 10px 14px;
+
+            color: white;
+
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 11px;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .publish-button {
+            background: #059669;
+        }
+
+        .hide-button {
+            background: #dc2626;
+        }
+
+        .publication-button:hover {
+            transform: translateY(-2px);
+
+            filter: brightness(1.08);
+        }
+
+        /* ===============================================
+           FOOTER
+           =============================================== */
+
+        .footer {
+            margin-top: 50px;
+
+            color: #cbd5e1;
+
+            font-size: 11px;
+            text-align: center;
+
+            animation: footerAppear 1s ease 1.2s both;
+        }
+
+        @keyframes footerAppear {
+
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ===============================================
+           RESPONSIVE
+           =============================================== */
+
+        @media (max-width: 950px) {
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .logout-form {
+                top: 12px;
+                right: 12px;
+            }
+
+            .dashboard {
+                padding: 75px 17px 40px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-card {
+                min-height: 210px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Animated background -->
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+    <div class="bubble bubble3"></div>
+
+    <!-- Admin logout -->
+    <form th:action="@{/admin/logout}"
+          method="post"
+          class="logout-form">
+
+        <button type="submit"
+                class="logout-button">
+
+            Logout
+
+        </button>
+
+    </form>
+
+    <main class="dashboard">
+
+        <!-- Header -->
+        <header class="header">
+
+            <div class="admin-icon">
+                👨‍💼
+            </div>
+
+            <h1>Admin Dashboard</h1>
+
+            <p>
+                Manage voters, elections, reports and results
+            </p>
+
+        </header>
+
+        <!-- Publish/hide success message -->
+        <div class="success-message"
+             th:if="${successMsg}"
+             th:text="${successMsg}">
+        </div>
+
+        <!-- Dashboard cards -->
+        <section class="dashboard-grid">
+
+            <!-- Search voter -->
+            <a th:href="@{/search}"
+               class="dashboard-card search-card">
+
+                <div class="card-icon">
+                    🔍
+                </div>
+
+                <h2>Search Voter</h2>
+
+                <p>
+                    Search and view voter information
+                    using the voter ID.
+                </p>
+
+                <div class="arrow">
+                    →
+                </div>
+
+            </a>
+
+            <!-- Voter list -->
+            <a th:href="@{/voters}"
+               class="dashboard-card voter-card">
+
+                <div class="card-icon">
+                    👥
+                </div>
+
+                <h2>Voter List</h2>
+
+                <p>
+                    View submitted voter records
+                    and their details.
+                </p>
+
+                <div class="arrow">
+                    →
+                </div>
+
+            </a>
+
+            <!-- Election report -->
+            <a th:href="@{/report}"
+               class="dashboard-card report-card">
+
+                <div class="card-icon">
+                    📊
+                </div>
+
+                <h2>Election Report</h2>
+
+                <p>
+                    Analyze votes and view complete
+                    election statistics.
+                </p>
+
+                <div class="arrow">
+                    →
+                </div>
+
+            </a>
+
+            <!-- Winner -->
+            <a th:href="@{/winner}"
+               class="dashboard-card winner-card">
+
+                <div class="card-icon">
+                    🏆
+                </div>
+
+                <h2>Election Winner</h2>
+
+                <p>
+                    View the winning party and
+                    final election results.
+                </p>
+
+                <div class="arrow">
+                    →
+                </div>
+
+            </a>
+
+            <!-- Election control -->
+            <a th:href="@{/admin/elections}"
+               class="dashboard-card election-card">
+
+                <div class="card-icon">
+                    🗳️
+                </div>
+
+                <h2>Election Control</h2>
+
+                <p>
+                    Start or stop Lok Sabha
+                    and Assembly elections.
+                </p>
+
+                <div class="arrow">
+                    →
+                </div>
+
+            </a>
+
+            <!-- Result publication control -->
+            <section class="dashboard-card publication-card">
+
+                <div class="card-icon">
+                    📢
+                </div>
+
+                <h2>Result Publication</h2>
+
+                <!-- Published status -->
+                <div th:if="${resultsPublished}"
+                     class="publication-status published-status">
+
+                    PUBLISHED
+
+                </div>
+
+                <!-- Hidden status -->
+                <div th:if="${not resultsPublished}"
+                     class="publication-status hidden-status">
+
+                    HIDDEN FROM VOTERS
+
+                </div>
+
+                <p th:if="${not resultsPublished}">
+
+                    Voters will see “Results Coming Soon”
+                    until you publish the results.
+
+                </p>
+
+                <p th:if="${resultsPublished}">
+
+                    Voters can currently view the
+                    official results.
+
+                </p>
+
+                <!-- Publish button -->
+                <form th:if="${not resultsPublished}"
+                      th:action="@{/admin/results/publish}"
+                      method="post"
+                      class="publication-form">
+
+                    <button type="submit"
+                            class="publication-button publish-button">
+
+                        Publish Results
+
+                    </button>
+
+                </form>
+
+                <!-- Hide button -->
+                <form th:if="${resultsPublished}"
+                      th:action="@{/admin/results/hide}"
+                      method="post"
+                      class="publication-form">
+
+                    <button type="submit"
+                            class="publication-button hide-button">
+
+                        Hide Results
+
+                    </button>
+
+                </form>
+
+            </section>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            🔒 Secure Admin Panel &nbsp; • &nbsp;
+            📊 Election Management &nbsp; • &nbsp;
+            🗳️ Online Voting System
+
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

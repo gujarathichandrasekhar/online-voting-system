@@ -1,0 +1,636 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    background: #2563eb;
+    color: #172554;
+    overflow-x: hidden;
+}
+
+/* =====================================================
+   ANIMATED BACKGROUND
+   ===================================================== */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    z-index: -1;
+    animation: float 7s ease-in-out infinite;
+    pointer-events: none;
+}
+
+body::before {
+    top: -80px;
+    left: -70px;
+}
+
+body::after {
+    bottom: -100px;
+    right: -70px;
+    animation-delay: 2s;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-25px) scale(1.08);
+    }
+}
+
+/* =====================================================
+   MAIN WRAPPER
+   ===================================================== */
+
+.form-wrapper {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px 20px;
+}
+
+/* =====================================================
+   FORM CARD
+   ===================================================== */
+
+.form-card {
+    width: 100%;
+    max-width: 720px;
+
+    margin: 0 auto;
+
+    background: rgba(255, 255, 255, 0.97);
+
+    border-radius: 22px;
+
+    padding: 38px 42px;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.20),
+        0 8px 25px rgba(0, 0, 0, 0.10);
+
+    animation: cardAppear 0.8s ease;
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* =====================================================
+   TOP BLUE LINE
+   ===================================================== */
+
+.form-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 6px;
+
+    background: #1d4ed8;
+}
+
+@keyframes cardAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(35px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================================
+   HEADING
+   ===================================================== */
+
+h1 {
+    margin: 0;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    color: #1e3a8a;
+
+    text-align: center;
+
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: #64748b;
+
+    margin: 8px 0 30px;
+
+    text-align: center;
+
+    font-size: 15px;
+}
+
+/* =====================================================
+   FORM CONTENT
+   ===================================================== */
+
+/*
+   This makes the entire form use one consistent width.
+*/
+
+.form-card form {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* =====================================================
+   QUESTIONS
+   ===================================================== */
+
+.question {
+    width: 100%;
+
+    margin-bottom: 23px;
+
+    animation: fadeUp 0.7s ease both;
+}
+
+.question:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.question:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.question:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.question:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+.question:nth-child(6) {
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================================
+   FORM LABELS
+   ===================================================== */
+
+.question > label {
+    display: block;
+
+    width: 100%;
+
+    font-weight: 600;
+
+    margin-bottom: 9px;
+
+    color: #1e3a8a;
+
+    font-size: 15px;
+}
+
+.required {
+    color: #dc2626;
+    margin-left: 3px;
+}
+
+/* =====================================================
+   ALL TEXT INPUTS + DROPDOWNS
+   EXACT SAME WIDTH AND HEIGHT
+   ===================================================== */
+
+.question input[type="text"],
+.question input[type="email"],
+.question input[type="password"],
+.question input[type="number"],
+.question select {
+
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    height: 48px;
+
+    padding: 0 15px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    color: #172554;
+
+    background: #f8fafc;
+
+    border-radius: 9px;
+
+    border: 1.5px solid #bfdbfe;
+
+    outline: none;
+
+    transition: all 0.3s ease;
+}
+
+/* =====================================================
+   SELECT / DROPDOWN
+   ===================================================== */
+
+.question select {
+    cursor: pointer;
+}
+
+/* =====================================================
+   FOCUS EFFECT
+   ===================================================== */
+
+.question input[type="text"]:focus,
+.question input[type="email"]:focus,
+.question input[type="password"]:focus,
+.question input[type="number"]:focus,
+.question select:focus {
+
+    background: #ffffff;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.12);
+
+    transform: translateY(-1px);
+}
+
+/* =====================================================
+   HOVER EFFECT
+   ===================================================== */
+
+.question input[type="text"]:hover,
+.question input[type="email"]:hover,
+.question input[type="password"]:hover,
+.question input[type="number"]:hover,
+.question select:hover {
+
+    border-color: #60a5fa;
+}
+
+/* =====================================================
+   RADIO AND CHECKBOX
+   ===================================================== */
+
+.question input[type="radio"],
+.question input[type="checkbox"] {
+
+    accent-color: #2563eb;
+
+    margin-right: 8px;
+
+    cursor: pointer;
+
+    transform: scale(1.05);
+}
+
+/* =====================================================
+   RADIO / CHECKBOX CONTAINER
+   ===================================================== */
+
+.question > div {
+
+    width: 100%;
+
+    margin-top: 9px;
+
+    color: #475569;
+}
+
+/* =====================================================
+   RADIO / CHECKBOX LABELS
+   ===================================================== */
+
+.question > div label {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    width: auto;
+
+    font-weight: 400;
+
+    color: #475569;
+
+    margin-right: 20px;
+
+    margin-bottom: 5px;
+
+    cursor: pointer;
+}
+
+/* =====================================================
+   FORM FOOTER
+   ===================================================== */
+
+.form-footer {
+
+    width: 100%;
+
+    margin-top: 30px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #dbeafe;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+/* =====================================================
+   SUBMIT BUTTON
+   EXACT SAME WIDTH AS FORM INPUTS
+   ===================================================== */
+
+.form-footer button,
+.form-footer input[type="submit"],
+button[type="submit"] {
+
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    height: 48px;
+
+    padding: 0 20px;
+
+    background: #2563eb;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.2px;
+
+    box-shadow:
+        0 8px 18px rgba(37, 99, 235, 0.28);
+
+    transition: all 0.3s ease;
+}
+
+/* =====================================================
+   BUTTON HOVER
+   ===================================================== */
+
+.form-footer button:hover,
+.form-footer input[type="submit"]:hover,
+button[type="submit"]:hover {
+
+    background: #1d4ed8;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 25px rgba(37, 99, 235, 0.35);
+}
+
+/* =====================================================
+   BUTTON ACTIVE
+   ===================================================== */
+
+.form-footer button:active,
+.form-footer input[type="submit"]:active,
+button[type="submit"]:active {
+
+    transform: translateY(0);
+
+    box-shadow:
+        0 5px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* =====================================================
+   DISABLED BUTTON
+   ===================================================== */
+
+.form-footer button:disabled,
+button[type="submit"]:disabled {
+
+    background: #93c5fd;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+/* =====================================================
+   ERROR / MESSAGE
+   ===================================================== */
+
+.msg,
+.error,
+.alert {
+
+    width: 100%;
+
+    margin-bottom: 20px;
+
+    padding: 12px 15px;
+
+    border-radius: 9px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+/* =====================================================
+   TABLET
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .form-wrapper {
+        padding: 30px 20px;
+    }
+
+    .form-card {
+        max-width: 650px;
+
+        padding: 34px 32px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+}
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+    .form-wrapper {
+
+        width: 100%;
+
+        min-height: 100vh;
+
+        padding: 20px 12px;
+
+        align-items: flex-start;
+    }
+
+    .form-card {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        padding: 28px 20px;
+
+        border-radius: 17px;
+
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+
+        margin-bottom: 25px;
+    }
+
+    .question {
+        margin-bottom: 20px;
+    }
+
+    .question > label {
+        font-size: 14px;
+    }
+
+    .question input[type="text"],
+    .question input[type="email"],
+    .question input[type="password"],
+    .question input[type="number"],
+    .question select {
+
+        width: 100%;
+
+        height: 48px;
+
+        font-size: 14px;
+    }
+
+    .form-footer {
+
+        margin-top: 25px;
+
+        padding-top: 18px;
+    }
+
+    .form-footer button,
+    .form-footer input[type="submit"],
+    button[type="submit"] {
+
+        width: 100%;
+
+        height: 48px;
+    }
+}
+
+/* =====================================================
+   VERY SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 400px) {
+
+    .form-wrapper {
+        padding: 15px 10px;
+    }
+
+    .form-card {
+        padding: 25px 16px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    .question input[type="text"],
+    .question input[type="email"],
+    .question input[type="password"],
+    .question input[type="number"],
+    .question select {
+
+        height: 46px;
+    }
+
+    .form-footer button,
+    .form-footer input[type="submit"],
+    button[type="submit"] {
+
+        height: 46px;
+    }
+}

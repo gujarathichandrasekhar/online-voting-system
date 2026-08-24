@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Online Voting Application</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        /* ==============================
+           RESET
+        ============================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* ==============================
+           BODY
+        ============================== */
+
+        body {
+
+            min-height: 100vh;
+
+            font-family: "Poppins", sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #312e81,
+                #4c1d95,
+                #0369a1
+            );
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 40px 15px;
+
+            position: relative;
+
+            overflow-x: hidden;
+        }
+
+
+        /* ==============================
+           ANIMATED BACKGROUND CIRCLES
+        ============================== */
+
+        .circle {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            z-index: 0;
+
+            pointer-events: none;
+        }
+
+
+        .circle-one {
+
+            width: 350px;
+            height: 350px;
+
+            top: -150px;
+            left: -120px;
+
+            animation: floatOne 8s ease-in-out infinite;
+        }
+
+
+        .circle-two {
+
+            width: 450px;
+            height: 450px;
+
+            bottom: -220px;
+            right: -150px;
+
+            animation: floatTwo 10s ease-in-out infinite;
+        }
+
+
+        .circle-three {
+
+            width: 180px;
+            height: 180px;
+
+            top: 25%;
+            right: 10%;
+
+            background: rgba(34, 211, 238, 0.10);
+
+            animation: floatThree 6s ease-in-out infinite;
+        }
+
+
+        @keyframes floatOne {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(40px, 35px);
+            }
+        }
+
+
+        @keyframes floatTwo {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-40px, -30px);
+            }
+        }
+
+
+        @keyframes floatThree {
+
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.1);
+            }
+        }
+
+
+        /* ==============================
+           ADMIN LOGIN
+        ============================== */
+
+        .admin-link {
+
+            position: fixed;
+
+            top: 25px;
+
+            right: 30px;
+
+            z-index: 10;
+
+            animation: slideDown 0.8s ease;
+        }
+
+
+        .admin-link a {
+
+            display: inline-block;
+
+            padding: 11px 20px;
+
+            border-radius: 30px;
+
+            background: rgba(255, 255, 255, 0.15);
+
+            border: 1px solid rgba(255, 255, 255, 0.30);
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            backdrop-filter: blur(12px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.20);
+
+            transition: all 0.3s ease;
+        }
+
+
+        .admin-link a:hover {
+
+            background: white;
+
+            color: #4c1d95;
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 25px rgba(0, 0, 0, 0.30);
+        }
+
+
+        @keyframes slideDown {
+
+            from {
+                opacity: 0;
+                transform: translateY(-25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* ==============================
+           MAIN CARD
+        ============================== */
+
+        .voting-card {
+
+            width: 100%;
+
+            max-width: 500px;
+
+            padding: 38px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border-radius: 25px;
+
+            position: relative;
+
+            z-index: 2;
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.35);
+
+            animation: cardAppear 0.9s ease;
+
+            transition: 0.4s;
+        }
+
+
+        .voting-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 35px 90px rgba(0, 0, 0, 0.40);
+        }
+
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.94);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+
+        /* ==============================
+           VOTING ICON
+        ============================== */
+
+        .voting-icon {
+
+            width: 82px;
+
+            height: 82px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 38px;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #2563eb,
+                #06b6d4
+            );
+
+            color: white;
+
+            box-shadow:
+                0 12px 30px rgba(37, 99, 235, 0.35);
+
+            animation: iconBounce 2.5s ease-in-out infinite;
+        }
+
+
+        @keyframes iconBounce {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+
+        /* ==============================
+           HEADING
+        ============================== */
+
+        h1 {
+
+            text-align: center;
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            color: #312e81;
+
+            margin-bottom: 5px;
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* ==============================
+           FORM GROUP
+        ============================== */
+
+        .form-group {
+
+            margin-bottom: 20px;
+
+            animation: formAppear 0.7s ease both;
+        }
+
+
+        .form-group:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .form-group:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .form-group:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .form-group:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .form-group:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+
+        @keyframes formAppear {
+
+            from {
+                opacity: 0;
+                transform: translateX(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+
+        /* ==============================
+           LABEL
+        ============================== */
+
+        .form-label {
+
+            display: block;
+
+            color: #312e81;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 7px;
+        }
+
+
+        /* ==============================
+           INPUTS
+        ============================== */
+
+        .form-control,
+        .form-select {
+
+            width: 100%;
+
+            padding: 13px 15px;
+
+            border-radius: 10px;
+
+            border: 1.5px solid #ddd6fe;
+
+            background: #f8fafc;
+
+            color: #1e1b4b;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 13px;
+
+            outline: none;
+
+            transition: all 0.3s ease;
+        }
+
+
+        .form-control:hover,
+        .form-select:hover {
+
+            border-color: #a78bfa;
+
+            background: white;
+        }
+
+
+        .form-control:focus,
+        .form-select:focus {
+
+            border-color: #7c3aed;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(124, 58, 237, 0.12);
+
+            transform: translateY(-2px);
+        }
+
+
+        /* ==============================
+           SUBMIT BUTTON
+        ============================== */
+
+        .vote-button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 5px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #2563eb,
+                #0891b2
+            );
+
+            background-size: 200% 200%;
+
+            color: white;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.3px;
+
+            cursor: pointer;
+
+            position: relative;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 25px rgba(79, 70, 229, 0.35);
+
+            transition: all 0.3s ease;
+
+            animation: gradientMove 5s ease infinite;
+        }
+
+
+        @keyframes gradientMove {
+
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+
+        .vote-button:hover {
+
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 15px 30px rgba(79, 70, 229, 0.45);
+        }
+
+
+        .vote-button:active {
+
+            transform: translateY(0);
+        }
+
+
+        /* Button shine */
+
+        .vote-button::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: -120%;
+
+            width: 70%;
+
+            height: 100%;
+
+            background: rgba(255, 255, 255, 0.25);
+
+            transform: skewX(-25deg);
+
+            transition: 0.7s;
+        }
+
+
+        .vote-button:hover::before {
+
+            left: 130%;
+        }
+
+
+        /* ==============================
+           MESSAGE
+        ============================== */
+
+        .message {
+
+            min-height: 20px;
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            color: #dc2626;
+
+            font-size: 13px;
+
+            animation: messageAppear 0.4s ease;
+        }
+
+
+        @keyframes messageAppear {
+
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        .secure-text {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            font-size: 11px;
+
+            color: #94a3b8;
+        }
+
+
+        /* ==============================
+           MOBILE
+        ============================== */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 80px 15px 30px;
+            }
+
+
+            .admin-link {
+
+                top: 15px;
+
+                right: 15px;
+            }
+
+
+            .admin-link a {
+
+                padding: 9px 15px;
+
+                font-size: 12px;
+            }
+
+
+            .voting-card {
+
+                padding: 28px 22px;
+
+                border-radius: 20px;
+            }
+
+
+            h1 {
+
+                font-size: 23px;
+            }
+
+
+            .voting-icon {
+
+                width: 68px;
+
+                height: 68px;
+
+                font-size: 30px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- Animated Background -->
+
+<div class="circle circle-one"></div>
+
+<div class="circle circle-two"></div>
+
+<div class="circle circle-three"></div>
+
+
+<!-- Admin Login -->
+
+<div class="admin-link">
+
+    <a href="/admin/login">
+        🔐 Admin Login
+    </a>
+
+</div>
+
+
+<!-- Voting Card -->
+
+<div class="voting-card">
+
+
+    <!-- Voting Icon -->
+
+    <div class="voting-icon">
+        🗳️
+    </div>
+
+
+    <!-- Heading -->
+
+    <h1>
+        Online Voting Application
+    </h1>
+
+
+    <p class="subtitle">
+        Cast your vote securely and make your voice count
+    </p>
+
+
+    <!-- Voting Form -->
+
+    <form th:action="@{/vote}"
+          method="post"
+          th:object="${voter}">
+
+
+        <!-- Name -->
+
+        <div class="form-group">
+
+            <label class="form-label">
+                👤 Name
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                th:field="*{name}"
+                placeholder="Enter your full name"
+                required
+            >
+
+        </div>
+
+
+        <!-- Voter ID -->
+
+        <div class="form-group">
+
+            <label class="form-label">
+                🪪 Voter ID
+            </label>
+
+			<input
+			    type="text"
+			    class="form-control"
+			    value="Automatically Generated"
+			    readonly
+			
+            >
+
+        </div>
+
+
+        <!-- Age -->
+
+        <div class="form-group">
+
+            <label class="form-label">
+                🎂 Age
+            </label>
+
+            <input
+                type="number"
+                class="form-control"
+                th:field="*{age}"
+                placeholder="Enter your age"
+                min="18"
+                required
+            >
+
+        </div>
+
+
+        <!-- Location -->
+
+        <div class="form-group">
+
+            <label class="form-label">
+                📍 Location
+            </label>
+
+			<div class="mb-3">
+
+			    <label class="form-label">Location</label>
+
+			    <select
+			        class="form-select"
+			        th:field="*{location}"
+			        required>
+
+			        <option value="">-- Select State --</option>
+
+			        <option value="Andhra Pradesh">Andhra Pradesh</option>
+			        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+			        <option value="Assam">Assam</option>
+			        <option value="Bihar">Bihar</option>
+			        <option value="Chhattisgarh">Chhattisgarh</option>
+			        <option value="Goa">Goa</option>
+			        <option value="Gujarat">Gujarat</option>
+			        <option value="Haryana">Haryana</option>
+			        <option value="Himachal Pradesh">Himachal Pradesh</option>
+			        <option value="Jharkhand">Jharkhand</option>
+			        <option value="Karnataka">Karnataka</option>
+			        <option value="Kerala">Kerala</option>
+			        <option value="Madhya Pradesh">Madhya Pradesh</option>
+			        <option value="Maharashtra">Maharashtra</option>
+			        <option value="Manipur">Manipur</option>
+			        <option value="Meghalaya">Meghalaya</option>
+			        <option value="Mizoram">Mizoram</option>
+			        <option value="Nagaland">Nagaland</option>
+			        <option value="Odisha">Odisha</option>
+			        <option value="Punjab">Punjab</option>
+			        <option value="Rajasthan">Rajasthan</option>
+			        <option value="Sikkim">Sikkim</option>
+			        <option value="Tamil Nadu">Tamil Nadu</option>
+			        <option value="Telangana">Telangana</option>
+			        <option value="Tripura">Tripura</option>
+			        <option value="Uttar Pradesh">Uttar Pradesh</option>
+			        <option value="Uttarakhand">Uttarakhand</option>
+			        <option value="West Bengal">West Bengal</option>
+
+			        <option value="Delhi">Delhi</option>
+			        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+			        <option value="Ladakh">Ladakh</option>
+
+			    </select>
+
+			</div>
+            >
+
+        </div>
+
+
+        <!-- Party -->
+
+        <div class="form-group">
+
+            <label class="form-label">
+                🏛️ Select Party
+            </label>
+
+            <select
+                class="form-select"
+                th:field="*{party}"
+                required
+            >
+
+                <option value="">
+                    Choose your party
+                </option>
+
+                <option value="BJP">
+                    BJP
+                </option>
+
+                <option value="YCP">
+                    YCP
+                </option>
+
+                <option value="JSP">
+                    JSP
+                </option>
+
+                <option value="Congress">
+                    Congress
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Submit -->
+
+        <button
+            type="submit"
+            class="vote-button">
+
+            🗳️ Submit Vote
+
+        </button>
+
+
+    </form>
+
+
+    <!-- Backend Message -->
+
+    <p
+        class="message"
+        th:text="${msg}">
+    </p>
+
+
+    <!-- Security -->
+
+    <div class="secure-text">
+
+        🔒 Secure • Transparent • Online Voting System
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

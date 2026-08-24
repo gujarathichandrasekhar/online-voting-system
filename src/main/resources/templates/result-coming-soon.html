@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Results Coming Soon | Online Voting System</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/voter-style.css}">
+
+    <style>
+
+        .waiting-icon {
+            width: 90px;
+            height: 90px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 42px;
+
+            border-radius: 50%;
+
+            background: linear-gradient(
+                135deg,
+                #0066ff,
+                #00a6c7
+            );
+
+            box-shadow:
+                0 0 0 10px rgba(0, 166, 199, 0.10),
+                0 0 0 20px rgba(0, 166, 199, 0.05),
+                0 15px 35px rgba(0, 114, 255, 0.35);
+
+            animation: waitingPulse 2s infinite;
+        }
+
+        @keyframes waitingPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        .coming-soon-box {
+            margin: 22px 0;
+            padding: 18px;
+
+            color: #075985;
+
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: center;
+
+            border: 1px solid #bae6fd;
+            border-radius: 14px;
+
+            background: #f0f9ff;
+        }
+
+    </style>
+
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-card">
+
+        <div class="brand">
+
+            <div class="waiting-icon">
+                ⏳
+            </div>
+
+            <h1>Results Coming Soon</h1>
+
+            <p class="subtitle">
+                The election results have not been
+                published by the administrator yet.
+            </p>
+
+        </div>
+
+        <div class="coming-soon-box">
+
+            🗳️ Voting or result verification may still
+            be in progress.
+
+            <br><br>
+
+            Please check again after the administrator
+            publishes the official election results.
+
+        </div>
+
+        <a class="btn btn-primary"
+           th:href="@{/voter/dashboard}">
+
+            🏠 Return to Voter Dashboard
+
+        </a>
+
+    </main>
+
+</body>
+
+</html>

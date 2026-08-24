@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Registration | Online Voting System</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =========================
+           BODY
+        ========================= */
+
+        body {
+
+            min-height: 100vh;
+
+            font-family: "Poppins", sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #312e81,
+                #7c3aed
+            );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
+
+            position: relative;
+        }
+
+
+        /* =========================
+           ANIMATED BACKGROUND
+        ========================= */
+
+        body::before,
+        body::after {
+
+            content: "";
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            animation: floating 8s ease-in-out infinite;
+        }
+
+
+        body::before {
+
+            width: 350px;
+            height: 350px;
+
+            top: -150px;
+            left: -120px;
+        }
+
+
+        body::after {
+
+            width: 450px;
+            height: 450px;
+
+            bottom: -200px;
+            right: -150px;
+
+            animation-delay: 2s;
+        }
+
+
+        @keyframes floating {
+
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-35px) rotate(12deg);
+            }
+        }
+
+
+        /* =========================
+           CARD
+        ========================= */
+
+        .register-card {
+
+            width: 430px;
+
+            max-width: 92%;
+
+            padding: 38px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.35);
+
+            position: relative;
+
+            z-index: 2;
+
+            animation: cardAppear 0.9s ease;
+
+            transition: 0.4s;
+        }
+
+
+        .register-card:hover {
+
+            transform: translateY(-6px);
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.40);
+        }
+
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.94);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+
+        /* =========================
+           ICON
+        ========================= */
+
+        .admin-icon {
+
+            width: 78px;
+            height: 78px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #4f46e5
+            );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 35px;
+
+            color: white;
+
+            box-shadow:
+                0 12px 28px rgba(124, 58, 237, 0.35);
+
+            animation: iconPulse 2.5s infinite;
+        }
+
+
+        @keyframes iconPulse {
+
+            0%, 100% {
+                transform: scale(1);
+                box-shadow:
+                    0 12px 28px rgba(124, 58, 237, 0.35);
+            }
+
+            50% {
+                transform: scale(1.08);
+                box-shadow:
+                    0 15px 35px rgba(124, 58, 237, 0.50);
+            }
+        }
+
+
+        /* =========================
+           TITLE
+        ========================= */
+
+        h2 {
+
+            text-align: center;
+
+            color: #312e81;
+
+            font-size: 27px;
+
+            font-weight: 700;
+
+            margin-bottom: 7px;
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* =========================
+           INPUT
+        ========================= */
+
+        .input-label {
+
+            display: block;
+
+            color: #334155;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 7px;
+        }
+
+
+        .input-group {
+
+            position: relative;
+
+            margin-bottom: 22px;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 18px;
+
+            color: #7c3aed;
+
+            transition: 0.3s;
+
+            z-index: 2;
+        }
+
+
+        .input-group input {
+
+            width: 100%;
+
+            padding: 14px 15px 14px 45px;
+
+            border: 1.5px solid #ddd6fe;
+
+            border-radius: 11px;
+
+            background: #fafafa;
+
+            outline: none;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 14px;
+
+            color: #1e1b4b;
+
+            transition: all 0.3s ease;
+        }
+
+
+        .input-group input:hover {
+
+            border-color: #a78bfa;
+        }
+
+
+        .input-group input:focus {
+
+            background: white;
+
+            border-color: #7c3aed;
+
+            box-shadow:
+                0 0 0 4px rgba(124, 58, 237, 0.12);
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           REGISTER BUTTON
+        ========================= */
+
+        .register-btn {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #4f46e5
+            );
+
+            color: white;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 9px 22px rgba(124, 58, 237, 0.30);
+
+            transition: all 0.3s ease;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        .register-btn:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 15px 30px rgba(124, 58, 237, 0.40);
+        }
+
+
+        .register-btn:active {
+
+            transform: translateY(0);
+        }
+
+
+        /* Button shine */
+
+        .register-btn::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: -100%;
+
+            width: 60%;
+
+            height: 100%;
+
+            background: rgba(255,255,255,0.25);
+
+            transform: skewX(-25deg);
+
+            transition: 0.6s;
+        }
+
+
+        .register-btn:hover::before {
+
+            left: 130%;
+        }
+
+
+        /* =========================
+           DIVIDER
+        ========================= */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 25px 0;
+        }
+
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #e2e8f0;
+        }
+
+
+        .divider span {
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           LOGIN LINK
+        ========================= */
+
+        .login-text {
+
+            text-align: center;
+
+            font-size: 13px;
+
+            color: #64748b;
+        }
+
+
+        .login-text a {
+
+            color: #7c3aed;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            transition: 0.3s;
+        }
+
+
+        .login-text a:hover {
+
+            color: #4f46e5;
+
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           SECURITY TEXT
+        ========================= */
+
+        .security-text {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            font-size: 11px;
+
+            color: #94a3b8;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 500px) {
+
+            .register-card {
+
+                padding: 30px 22px;
+
+                border-radius: 20px;
+            }
+
+            h2 {
+
+                font-size: 24px;
+            }
+
+            .admin-icon {
+
+                width: 65px;
+                height: 65px;
+
+                font-size: 28px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="register-card">
+
+
+    <!-- Admin Icon -->
+
+    <div class="admin-icon">
+        👨‍💼
+    </div>
+
+
+    <!-- Heading -->
+
+    <h2>
+        Admin Registration
+    </h2>
+
+    <p class="subtitle">
+        Create an administrator account for the voting system
+    </p>
+
+
+    <!-- Registration Form -->
+
+    <form th:action="@{/admin/save}"
+          method="post"
+          th:object="${admin}">
+
+
+        <!-- Username -->
+
+        <label class="input-label">
+            Username
+        </label>
+
+        <div class="input-group">
+
+            <input
+                type="text"
+                th:field="*{username}"
+                placeholder="Enter admin username"
+                required
+            >
+
+            <span class="input-icon">
+                👤
+            </span>
+
+        </div>
+
+
+        <!-- Password -->
+
+        <label class="input-label">
+            Password
+        </label>
+
+        <div class="input-group">
+
+            <input
+                type="password"
+                th:field="*{password}"
+                placeholder="Create a strong password"
+                required
+            >
+
+            <span class="input-icon">
+                🔑
+            </span>
+
+        </div>
+
+
+        <!-- Register Button -->
+
+        <button type="submit" class="register-btn">
+            Create Admin Account
+        </button>
+
+
+    </form>
+
+
+    <!-- Divider -->
+
+    <div class="divider">
+        <span>OR</span>
+    </div>
+
+
+    <!-- Login -->
+
+    <div class="login-text">
+
+        Already have an account?
+
+        <a href="/admin/login">
+            Login here
+        </a>
+
+    </div>
+
+
+    <!-- Security -->
+
+    <div class="security-text">
+
+        🔒 Protected Admin Area • Online Voting System
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

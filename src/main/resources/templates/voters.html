@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Voters</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        /* =========================
+           RESET
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =========================
+           BODY
+        ========================= */
+
+        body {
+
+            min-height: 100vh;
+
+            padding: 50px 25px;
+
+            font-family: "Poppins", sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #312e81,
+                    #581c87,
+                    #075985
+                );
+
+            overflow-x: hidden;
+
+            position: relative;
+        }
+
+
+        /* =========================
+           BACKGROUND EFFECTS
+        ========================= */
+
+        .circle {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            filter: blur(3px);
+
+            z-index: 0;
+        }
+
+
+        .circle-one {
+
+            width: 320px;
+
+            height: 320px;
+
+            top: -130px;
+
+            left: -100px;
+
+            background: rgba(139, 92, 246, 0.22);
+
+            animation: floatOne 8s ease-in-out infinite;
+        }
+
+
+        .circle-two {
+
+            width: 420px;
+
+            height: 420px;
+
+            right: -170px;
+
+            bottom: -180px;
+
+            background: rgba(6, 182, 212, 0.20);
+
+            animation: floatTwo 10s ease-in-out infinite;
+        }
+
+
+        .circle-three {
+
+            width: 140px;
+
+            height: 140px;
+
+            right: 20%;
+
+            top: 15%;
+
+            background: rgba(59, 130, 246, 0.16);
+
+            animation: floatThree 6s ease-in-out infinite;
+        }
+
+
+        @keyframes floatOne {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(45px, 40px);
+            }
+        }
+
+
+        @keyframes floatTwo {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-40px, -35px);
+            }
+        }
+
+
+        @keyframes floatThree {
+
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-25px) scale(1.12);
+            }
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container-box {
+
+            width: 100%;
+
+            max-width: 1400px;
+
+            margin: auto;
+
+            padding: 35px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border-radius: 28px;
+
+            position: relative;
+
+            z-index: 2;
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.40);
+
+            animation: containerAppear 0.9s ease;
+
+            transition: 0.4s;
+        }
+
+
+        .container-box:hover {
+
+            box-shadow:
+                0 40px 100px rgba(0, 0, 0, 0.45);
+        }
+
+
+        @keyframes containerAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(50px)
+                    scale(0.95);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .header-icon {
+
+            width: 75px;
+
+            height: 75px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 34px;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #2563eb,
+                #06b6d4
+            );
+
+            color: white;
+
+            box-shadow:
+                0 12px 30px rgba(79, 70, 229, 0.35);
+
+            animation: iconFloat 2.5s ease-in-out infinite;
+        }
+
+
+        @keyframes iconFloat {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+        }
+
+
+        h1 {
+
+            color: #312e81;
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            margin-bottom: 5px;
+        }
+
+
+        .subtitle {
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           TABLE WRAPPER
+        ========================= */
+
+        .table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            border-radius: 16px;
+
+            border: 1px solid #e2e8f0;
+
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        table {
+
+            width: 100%;
+
+            min-width: 1050px;
+
+            border-collapse: collapse;
+
+            background: white;
+        }
+
+
+        /* =========================
+           TABLE HEADER
+        ========================= */
+
+        thead {
+
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed,
+                #0891b2
+            );
+
+            color: white;
+        }
+
+
+        th {
+
+            padding: 16px 14px;
+
+            text-align: left;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.5px;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           TABLE ROW
+        ========================= */
+
+        tbody tr {
+
+            border-bottom: 1px solid #e2e8f0;
+
+            transition: all 0.3s ease;
+
+            animation: rowAppear 0.6s ease both;
+        }
+
+
+        tbody tr:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        tbody tr:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        tbody tr:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        tbody tr:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        tbody tr:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+
+        tbody tr:hover {
+
+            background: #f5f3ff;
+
+            transform: scale(1.005);
+
+            box-shadow:
+                inset 5px 0 0 #7c3aed;
+        }
+
+
+        @keyframes rowAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateX(-20px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateX(0);
+            }
+        }
+
+
+        /* =========================
+           TABLE CELLS
+        ========================= */
+
+        td {
+
+            padding: 15px 14px;
+
+            color: #475569;
+
+            font-size: 12px;
+
+            font-weight: 500;
+
+            white-space: nowrap;
+        }
+
+
+        tbody tr:last-child {
+
+            border-bottom: none;
+        }
+
+
+        /* =========================
+           ID BADGE
+        ========================= */
+
+        .id-badge {
+
+            display: inline-block;
+
+            min-width: 35px;
+
+            text-align: center;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            color: #4338ca;
+
+            background: #ede9fe;
+
+            border: 1px solid #c4b5fd;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           VOTER ID
+        ========================= */
+
+        .voter-id {
+
+            display: inline-block;
+
+            padding: 6px 11px;
+
+            border-radius: 20px;
+
+            color: #0369a1;
+
+            background: #e0f2fe;
+
+            border: 1px solid #bae6fd;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           ELECTION TYPE BADGE
+        ========================= */
+
+        .election-type {
+
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            color: #6d28d9;
+
+            background: #ede9fe;
+
+            border: 1px solid #c4b5fd;
+
+            font-weight: 700;
+
+            transition: 0.3s;
+        }
+
+
+        .election-type:hover {
+
+            transform: scale(1.06);
+
+            box-shadow:
+                0 5px 15px rgba(124, 58, 237, 0.20);
+        }
+
+
+        /* =========================
+           PARTY BADGE
+        ========================= */
+
+        .party {
+
+            display: inline-block;
+
+            padding: 6px 13px;
+
+            border-radius: 20px;
+
+            color: #047857;
+
+            background: #d1fae5;
+
+            border: 1px solid #a7f3d0;
+
+            font-weight: 700;
+
+            transition: 0.3s;
+        }
+
+
+        .party:hover {
+
+            transform: scale(1.08);
+
+            box-shadow:
+                0 5px 15px rgba(16, 185, 129, 0.20);
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+        }
+
+
+        /* =========================
+           BACK BUTTON
+        ========================= */
+
+        .back-button {
+
+            display: block;
+
+            width: 220px;
+
+            margin: 25px auto 0;
+
+            padding: 12px;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            border-radius: 11px;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #2563eb
+            );
+
+            box-shadow:
+                0 10px 25px rgba(79, 70, 229, 0.30);
+
+            transition: all 0.3s ease;
+        }
+
+
+        .back-button:hover {
+
+            color: white;
+
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 15px 30px rgba(79, 70, 229, 0.40);
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 20px 10px;
+            }
+
+
+            .container-box {
+
+                padding: 22px 15px;
+
+                border-radius: 20px;
+            }
+
+
+            h1 {
+
+                font-size: 24px;
+            }
+
+
+            .header-icon {
+
+                width: 65px;
+
+                height: 65px;
+
+                font-size: 28px;
+            }
+
+
+            .back-button {
+
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- Background animations -->
+
+<div class="circle circle-one"></div>
+
+<div class="circle circle-two"></div>
+
+<div class="circle circle-three"></div>
+
+
+<!-- Main Container -->
+
+<div class="container-box">
+
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <div class="header-icon">
+            👥
+        </div>
+
+        <h1>
+            All Voters
+        </h1>
+
+        <p class="subtitle">
+            Registered voters in the online voting system
+        </p>
+
+    </div>
+
+
+    <!-- Table -->
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>NAME</th>
+
+                <th>VOTER ID</th>
+
+                <th>AGE</th>
+
+                <th>LOCATION</th>
+
+                <!-- NEW COLUMN -->
+                <th>ELECTION TYPE</th>
+
+                <th>PARTY</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            <tr th:each="v : ${voters}">
+
+                <!-- ID -->
+
+                <td>
+
+                    <span
+                            class="id-badge"
+                            th:text="${v.id}">
+                    </span>
+
+                </td>
+
+
+                <!-- NAME -->
+
+                <td>
+
+                    <strong
+                            th:text="${v.name}">
+                    </strong>
+
+                </td>
+
+
+                <!-- VOTER ID -->
+
+                <td>
+
+                    <span
+                            class="voter-id"
+                            th:text="${v.voterId}">
+                    </span>
+
+                </td>
+
+
+                <!-- AGE -->
+
+                <td
+                        th:text="${v.age}">
+                </td>
+
+
+                <!-- LOCATION -->
+
+                <td
+                        th:text="${v.location}">
+                </td>
+
+
+                <!-- ELECTION TYPE -->
+
+                <td>
+
+                    <span
+                            class="election-type"
+                            th:text="${v.electionType}">
+                    </span>
+
+                </td>
+
+
+                <!-- PARTY -->
+
+                <td>
+
+                    <span
+                            class="party"
+                            th:text="${v.party}">
+                    </span>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- Back Button -->
+
+    <a href="/"
+       class="back-button">
+
+        🏠 Back to Home
+
+    </a>
+
+
+    <!-- Footer -->
+
+    <div class="footer">
+
+        🔒 Secure • Transparent • Online Voting System
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>New Voter Registration | Online Voting System</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/voter-style.css}">
+
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-card">
+
+        <!-- Logo and heading -->
+        <div class="brand">
+
+            <div class="brand-icon">
+                👤
+            </div>
+
+            <h1>New Voter Registration</h1>
+
+            <p class="subtitle">
+                Register first, then use your username
+                and password to log in and vote.
+            </p>
+
+        </div>
+
+        <!-- Registration error -->
+        <div class="alert alert-error"
+             th:if="${msg}"
+             th:text="${msg}">
+        </div>
+
+        <!-- Registration form -->
+        <form th:action="@{/voter/register}"
+              th:object="${account}"
+              method="post">
+
+            <!-- Voter name -->
+            <div class="form-group">
+
+                <label for="name">
+                    Voter Name
+                </label>
+
+                <input type="text"
+                       id="name"
+                       th:field="*{name}"
+                       minlength="3"
+                       maxlength="100"
+                       placeholder="Enter your full name"
+                       autocomplete="name"
+                       required>
+
+            </div>
+
+            <!-- Date of birth -->
+            <div class="form-group">
+
+                <label for="dateOfBirth">
+                    Date of Birth
+                </label>
+
+                <input type="date"
+                       id="dateOfBirth"
+                       th:field="*{dateOfBirth}"
+                       th:attr="min=${minimumDob},max=${maximumDob}"
+                       required>
+
+                <p class="subtitle">
+                    You must be at least 18 years old.
+                </p>
+
+            </div>
+
+            <!-- Username -->
+            <div class="form-group">
+
+                <label for="username">
+                    Create Username
+                </label>
+
+                <input type="text"
+                       id="username"
+                       th:field="*{username}"
+                       minlength="4"
+                       maxlength="30"
+                       pattern="[A-Za-z0-9._]{4,30}"
+                       placeholder="Example: chandu2026"
+                       autocomplete="username"
+                       required>
+
+                <p class="subtitle">
+                    Username must be different from your voter name.
+                </p>
+
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+
+                <label for="password">
+                    Create Password
+                </label>
+
+                <input type="password"
+                       id="password"
+                       th:field="*{password}"
+                       minlength="6"
+                       maxlength="72"
+                       placeholder="Minimum 6 characters"
+                       autocomplete="new-password"
+                       required>
+
+            </div>
+
+            <!-- Confirm password -->
+            <div class="form-group">
+
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+
+                <input type="password"
+                       id="confirmPassword"
+                       name="confirmPassword"
+                       minlength="6"
+                       maxlength="72"
+                       placeholder="Enter password again"
+                       autocomplete="new-password"
+                       required>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                Register Voter
+
+            </button>
+
+        </form>
+
+        <!-- Existing voter link -->
+        <div class="auth-link">
+
+            Already registered?
+
+            <a th:href="@{/voter/login}">
+                Login Here
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

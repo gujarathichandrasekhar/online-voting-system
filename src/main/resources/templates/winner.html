@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Election Winner | Online Voting System</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px;
+
+            font-family: "Poppins", sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #312e81,
+                    #581c87,
+                    #075985
+                );
+
+            position: relative;
+
+            overflow-x: hidden;
+        }
+
+
+        .circle {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            filter: blur(3px);
+
+            z-index: 0;
+        }
+
+
+        .circle-one {
+
+            width: 350px;
+
+            height: 350px;
+
+            top: -160px;
+
+            left: -120px;
+
+            background:
+                rgba(124, 58, 237, 0.25);
+
+            animation:
+                floatOne 8s ease-in-out infinite;
+        }
+
+
+        .circle-two {
+
+            width: 450px;
+
+            height: 450px;
+
+            right: -180px;
+
+            bottom: -220px;
+
+            background:
+                rgba(6, 182, 212, 0.20);
+
+            animation:
+                floatTwo 10s ease-in-out infinite;
+        }
+
+
+        .circle-three {
+
+            width: 160px;
+
+            height: 160px;
+
+            top: 15%;
+
+            right: 15%;
+
+            background:
+                rgba(236, 72, 153, 0.15);
+
+            animation:
+                floatThree 6s ease-in-out infinite;
+        }
+
+
+        @keyframes floatOne {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(45px, 40px);
+            }
+        }
+
+
+        @keyframes floatTwo {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-40px, -35px);
+            }
+        }
+
+
+        @keyframes floatThree {
+
+            0%, 100% {
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+            50% {
+                transform:
+                    translateY(-25px)
+                    scale(1.12);
+            }
+        }
+
+
+        .container-box {
+
+            width: 100%;
+
+            max-width: 950px;
+
+            padding: 40px;
+
+            background:
+                rgba(255, 255, 255, 0.97);
+
+            border-radius: 30px;
+
+            position: relative;
+
+            z-index: 2;
+
+            text-align: center;
+
+            box-shadow:
+                0 30px 90px
+                rgba(0, 0, 0, 0.45);
+
+            animation:
+                containerAppear 1s ease;
+        }
+
+
+        @keyframes containerAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(60px)
+                    scale(0.90);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        .trophy {
+
+            width: 100px;
+
+            height: 100px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            border-radius: 50%;
+
+            font-size: 52px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #facc15,
+                    #f59e0b,
+                    #ea580c
+                );
+
+            box-shadow:
+                0 0 0 10px
+                rgba(245, 158, 11, 0.10),
+
+                0 0 0 20px
+                rgba(245, 158, 11, 0.05),
+
+                0 15px 40px
+                rgba(245, 158, 11, 0.40);
+
+            animation:
+                trophyPop 1s ease,
+                trophyFloat 2.5s ease-in-out 1s infinite;
+        }
+
+
+        @keyframes trophyPop {
+
+            0% {
+
+                transform:
+                    scale(0)
+                    rotate(-20deg);
+
+                opacity: 0;
+            }
+
+            70% {
+
+                transform:
+                    scale(1.15)
+                    rotate(5deg);
+            }
+
+            100% {
+
+                transform:
+                    scale(1)
+                    rotate(0);
+
+                opacity: 1;
+            }
+        }
+
+
+        @keyframes trophyFloat {
+
+            0%, 100% {
+
+                transform:
+                    translateY(0);
+            }
+
+            50% {
+
+                transform:
+                    translateY(-9px);
+            }
+        }
+
+
+        h1 {
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            color: #1e1b4b;
+
+            margin-bottom: 7px;
+        }
+
+
+        .subtitle {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .election-type {
+
+            display: inline-block;
+
+            padding: 8px 18px;
+
+            margin-bottom: 25px;
+
+            border-radius: 20px;
+
+            background:
+                #ede9fe;
+
+            color:
+                #5b21b6;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .winner-box {
+
+            position: relative;
+
+            padding: 30px 20px;
+
+            margin: 15px 0 35px;
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ecfdf5,
+                    #dbeafe,
+                    #f5f3ff
+                );
+
+            border:
+                2px solid #c4b5fd;
+
+            overflow: hidden;
+
+            animation:
+                winnerAppear 1s ease;
+        }
+
+
+        .winner-box::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 220px;
+
+            height: 220px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(124, 58, 237, 0.10);
+
+            top: -110px;
+
+            left: -90px;
+        }
+
+
+        .winner-box::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+
+            height: 180px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(16, 185, 129, 0.08);
+
+            bottom: -100px;
+
+            right: -70px;
+        }
+
+
+        @keyframes winnerAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    scale(0.85);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    scale(1);
+            }
+        }
+
+
+        .winner-label {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            position: relative;
+
+            z-index: 2;
+
+            margin-bottom: 8px;
+        }
+
+
+        .winner {
+
+            position: relative;
+
+            z-index: 2;
+
+            font-size: 38px;
+
+            font-weight: 800;
+
+            color: #059669;
+
+            word-break: break-word;
+
+            animation:
+                winnerGlow 2s ease-in-out infinite alternate;
+        }
+
+
+        .winner-votes {
+
+            position: relative;
+
+            z-index: 2;
+
+            margin-top: 8px;
+
+            color: #475569;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        @keyframes winnerGlow {
+
+            from {
+
+                filter:
+                    drop-shadow(
+                        0 0 2px
+                        rgba(5, 150, 105, 0.20)
+                    );
+            }
+
+            to {
+
+                filter:
+                    drop-shadow(
+                        0 0 10px
+                        rgba(5, 150, 105, 0.35)
+                    );
+            }
+        }
+
+
+        .result-title {
+
+            color: #312e81;
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            margin-bottom: 18px;
+        }
+
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+
+            gap: 18px;
+
+            margin-top: 20px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .vote-card {
+
+            padding: 23px 15px;
+
+            border-radius: 18px;
+
+            color: white;
+
+            position: relative;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 12px 25px
+                rgba(0, 0, 0, 0.18);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+
+        .vote-card:hover {
+
+            transform:
+                translateY(-9px)
+                scale(1.03);
+
+            box-shadow:
+                0 20px 40px
+                rgba(0, 0, 0, 0.25);
+        }
+
+
+        .vote-card:nth-child(4n+1) {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f59e0b,
+                    #ea580c
+                );
+        }
+
+
+        .vote-card:nth-child(4n+2) {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #047857
+                );
+        }
+
+
+        .vote-card:nth-child(4n+3) {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ef4444,
+                    #be123c
+                );
+        }
+
+
+        .vote-card:nth-child(4n+4) {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #1d4ed8
+                );
+        }
+
+
+        .party-icon {
+
+            font-size: 25px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .party-name {
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            margin-bottom: 7px;
+
+            min-height: 42px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+        }
+
+
+        .vote-number {
+
+            font-size: 29px;
+
+            font-weight: 800;
+        }
+
+
+        .vote-text {
+
+            font-size: 10px;
+
+            opacity: 0.85;
+
+            margin-top: 3px;
+        }
+
+
+        .no-results {
+
+            padding: 30px;
+
+            border-radius: 18px;
+
+            background:
+                #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+
+            color:
+                #64748b;
+
+            font-size: 14px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .total-box {
+
+            margin-top: 5px;
+
+            margin-bottom: 30px;
+
+            padding: 20px;
+
+            border-radius: 17px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ede9fe,
+                    #dbeafe
+                );
+
+            border:
+                1px solid #c4b5fd;
+        }
+
+
+        .total-label {
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        .total-number {
+
+            display: block;
+
+            margin-top: 4px;
+
+            color: #4f46e5;
+
+            font-size: 30px;
+
+            font-weight: 800;
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            margin-top: 30px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 12px 22px;
+
+            border-radius: 11px;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+
+            box-shadow:
+                0 8px 20px
+                rgba(79,70,229,0.30);
+
+            transition:
+                0.3s;
+        }
+
+
+        .button:hover {
+
+            transform:
+                translateY(-3px);
+
+            color: white;
+        }
+
+
+        .secondary {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #475569,
+                    #334155
+                );
+        }
+
+
+        .report {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #059669,
+                    #047857
+                );
+        }
+
+
+        .footer {
+
+            margin-top: 25px;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+        }
+
+
+        .confetti {
+
+            position: fixed;
+
+            width: 8px;
+
+            height: 8px;
+
+            top: -20px;
+
+            z-index: 1;
+
+            animation:
+                confettiFall 4s linear infinite;
+        }
+
+
+        .c1 {
+            left: 10%;
+            background: #f59e0b;
+            animation-delay: 0.2s;
+        }
+
+        .c2 {
+            left: 25%;
+            background: #22c55e;
+            animation-delay: 1s;
+        }
+
+        .c3 {
+            left: 40%;
+            background: #3b82f6;
+            animation-delay: 0.5s;
+        }
+
+        .c4 {
+            left: 60%;
+            background: #ec4899;
+            animation-delay: 1.5s;
+        }
+
+        .c5 {
+            left: 75%;
+            background: #8b5cf6;
+            animation-delay: 0.8s;
+        }
+
+        .c6 {
+            left: 90%;
+            background: #06b6d4;
+            animation-delay: 1.8s;
+        }
+
+
+        @keyframes confettiFall {
+
+            0% {
+
+                opacity: 0;
+
+                transform:
+                    translateY(0)
+                    rotate(0);
+            }
+
+            10% {
+
+                opacity: 1;
+            }
+
+            100% {
+
+                opacity: 0;
+
+                transform:
+                    translateY(110vh)
+                    rotate(720deg);
+            }
+        }
+
+
+        @media (max-width: 750px) {
+
+            body {
+
+                padding: 20px;
+            }
+
+
+            .container-box {
+
+                padding: 28px 20px;
+
+                border-radius: 22px;
+            }
+
+
+            h1 {
+
+                font-size: 25px;
+            }
+
+
+            .winner {
+
+                font-size: 30px;
+            }
+
+
+            .cards {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .cards {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .trophy {
+
+                width: 80px;
+
+                height: 80px;
+
+                font-size: 42px;
+            }
+
+
+            .winner {
+
+                font-size: 26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- BACKGROUND -->
+
+<div class="circle circle-one"></div>
+
+<div class="circle circle-two"></div>
+
+<div class="circle circle-three"></div>
+
+
+<!-- CONFETTI -->
+
+<div class="confetti c1"></div>
+<div class="confetti c2"></div>
+<div class="confetti c3"></div>
+<div class="confetti c4"></div>
+<div class="confetti c5"></div>
+<div class="confetti c6"></div>
+
+
+<!-- MAIN CONTAINER -->
+
+<div class="container-box">
+
+
+    <!-- TROPHY -->
+
+    <div class="trophy">
+        🏆
+    </div>
+
+
+    <!-- HEADER -->
+
+    <h1>
+        Election Result
+    </h1>
+
+
+    <p class="subtitle">
+        Official Election Winner
+    </p>
+
+
+    <!-- STATE + ELECTION TYPE -->
+
+    <div
+            class="election-type"
+            th:if="${state != null && electionType != null
+                    && !#strings.isEmpty(state)
+                    && !#strings.isEmpty(electionType)}">
+
+        📍
+
+        <span th:text="${state}">
+            State
+        </span>
+
+        &nbsp; • &nbsp;
+
+        🗳️
+
+        <span th:text="${electionType}">
+            Election
+        </span>
+
+    </div>
+
+
+    <!-- =========================
+         WINNER
+    ========================= -->
+
+    <div class="winner-box">
+
+
+        <div class="winner-label">
+
+            🎉 WINNING PARTY 🎉
+
+        </div>
+
+
+        <div
+                class="winner"
+                th:text="${winner != null && !#strings.isEmpty(winner)
+                          ? winner
+                          : 'No Winner Yet'}">
+
+            No Winner Yet
+
+        </div>
+
+
+        <!-- WINNER VOTES -->
+
+        <div
+                class="winner-votes"
+                th:if="${results != null && !results.isEmpty()}">
+
+            <span
+                    th:each="entry : ${results}"
+                    th:if="${winner != null && winner.equals(entry.key)}"
+                    th:text="'Votes: ' + ${entry.value}">
+
+                Votes: 0
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TOTAL VOTES
+    ========================= -->
+
+    <div class="total-box">
+
+        <span class="total-label">
+
+            TOTAL VOTES CAST
+
+        </span>
+
+
+        <span
+                class="total-number"
+                th:text="${total != null ? total : 0}">
+
+            0
+
+        </span>
+
+    </div>
+
+
+    <!-- =========================
+         PARTY RESULTS
+    ========================= -->
+
+    <div class="result-title">
+
+        📊 Party-wise Results
+
+    </div>
+
+
+    <!-- DYNAMIC PARTY CARDS -->
+
+    <div
+            class="cards"
+            th:if="${results != null && !results.isEmpty()}">
+
+
+        <div
+                class="vote-card"
+                th:each="entry : ${results}">
+
+
+            <div class="party-icon">
+
+                🗳️
+
+            </div>
+
+
+            <div
+                    class="party-name"
+                    th:text="${entry.key}">
+
+                Party Name
+
+            </div>
+
+
+            <div
+                    class="vote-number"
+                    th:text="${entry.value}">
+
+                0
+
+            </div>
+
+
+            <div class="vote-text">
+
+                Votes
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         NO RESULTS
+    ========================= -->
+
+    <div
+            class="no-results"
+            th:if="${results == null || results.isEmpty()}">
+
+        📊
+
+        <br><br>
+
+        No votes are available for this election yet.
+
+    </div>
+
+
+    <!-- =========================
+         BUTTONS
+    ========================= -->
+
+    <div class="buttons">
+
+
+        <a
+                href="/"
+                class="button">
+
+            🏠 Home
+
+        </a>
+
+
+        <a
+                class="button report"
+                th:href="@{/report(state=${state},electionType=${electionType})}">
+
+            📊 Full Report
+
+        </a>
+
+
+        <a
+                href="/search"
+                class="button secondary">
+
+            🔍 Search Voters
+
+        </a>
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        🔒 Secure • Transparent • Online Voting System
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

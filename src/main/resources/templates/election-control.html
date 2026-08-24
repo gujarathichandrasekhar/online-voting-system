@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Election Control</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .elections {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+        }
+
+        .status {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .active {
+            color: green;
+        }
+
+        .inactive {
+            color: red;
+        }
+
+        button {
+            border: none;
+            padding: 13px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .enable {
+            background: #16a34a;
+            color: white;
+        }
+
+        .disable {
+            background: #dc2626;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        @media (max-width: 700px) {
+            .elections {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🗳️ Election Control</h1>
+
+    <div class="elections">
+
+        <!-- LOK SABHA -->
+
+        <div class="card">
+
+            <div class="icon">🗳️</div>
+
+            <h2>Lok Sabha Election</h2>
+
+            <div class="status"
+                 th:classappend="${lokSabhaStatus == 'ACTIVE'} ? ' active' : ' inactive'">
+
+                Status:
+
+                <span th:text="${lokSabhaStatus}">
+                    INACTIVE
+                </span>
+
+            </div>
+
+            <!-- ENABLE -->
+
+            <form th:if="${lokSabhaStatus != 'ACTIVE'}"
+                  method="post"
+                  action="/admin/election/enable">
+
+                <input type="hidden"
+                       name="electionType"
+                       value="Lok Sabha">
+
+                <button type="submit"
+                        class="enable">
+
+                    ▶ Enable Lok Sabha
+
+                </button>
+
+            </form>
+
+            <!-- DISABLE -->
+
+            <form th:if="${lokSabhaStatus == 'ACTIVE'}"
+                  method="post"
+                  action="/admin/election/disable">
+
+                <input type="hidden"
+                       name="electionType"
+                       value="Lok Sabha">
+
+                <button type="submit"
+                        class="disable">
+
+                    ⏹ Disable Lok Sabha
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ASSEMBLY -->
+
+        <div class="card">
+
+            <div class="icon">🏛️</div>
+
+            <h2>Assembly Election</h2>
+
+            <div class="status"
+                 th:classappend="${assemblyStatus == 'ACTIVE'} ? ' active' : ' inactive'">
+
+                Status:
+
+                <span th:text="${assemblyStatus}">
+                    INACTIVE
+                </span>
+
+            </div>
+
+            <!-- ENABLE -->
+
+            <form th:if="${assemblyStatus != 'ACTIVE'}"
+                  method="post"
+                  action="/admin/election/enable">
+
+                <input type="hidden"
+                       name="electionType"
+                       value="Assembly">
+
+                <button type="submit"
+                        class="enable">
+
+                    ▶ Enable Assembly
+
+                </button>
+
+            </form>
+
+            <!-- DISABLE -->
+
+            <form th:if="${assemblyStatus == 'ACTIVE'}"
+                  method="post"
+                  action="/admin/election/disable">
+
+                <input type="hidden"
+                       name="electionType"
+                       value="Assembly">
+
+                <button type="submit"
+                        class="disable">
+
+                    ⏹ Disable Assembly
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

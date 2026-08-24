@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Submit Vote | Online Voting System</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 40px 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow-x: hidden;
+
+            font-family: "Segoe UI", Arial, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #081b33,
+                #0b4f6c,
+                #087e8b,
+                #05a6c9
+            );
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+
+            width: 350px;
+            height: 350px;
+
+            z-index: -1;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            animation: floating 8s infinite ease-in-out;
+        }
+
+        body::before {
+            top: -100px;
+            left: -100px;
+        }
+
+        body::after {
+            right: -100px;
+            bottom: -100px;
+
+            animation-delay: 2s;
+        }
+
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(40px) scale(1.15);
+            }
+        }
+
+        /* ===============================================
+           TOP BUTTONS
+           =============================================== */
+
+        .top-actions {
+            position: fixed;
+            top: 18px;
+            right: 22px;
+
+            z-index: 10;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            min-height: 42px;
+            padding: 10px 17px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+            border-radius: 30px;
+
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .dashboard-btn {
+            color: #0057b8;
+            background: rgba(255, 255, 255, 0.96);
+
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-btn {
+            color: white;
+            background: #d92d20;
+
+            box-shadow: 0 8px 20px rgba(100, 20, 20, 0.25);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ===============================================
+           MAIN VOTING CARD
+           =============================================== */
+
+        .voting-card {
+            width: 100%;
+            max-width: 700px;
+
+            padding: 35px;
+
+            border-radius: 25px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+
+            animation: cardAppear 0.8s ease;
+        }
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===============================================
+           HEADER
+           =============================================== */
+
+        .header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .vote-icon {
+            width: 75px;
+            height: 75px;
+
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 38px;
+
+            border-radius: 50%;
+
+            background: linear-gradient(
+                135deg,
+                #00c6ff,
+                #0072ff
+            );
+
+            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.4);
+
+            animation: iconPulse 2s infinite;
+        }
+
+        @keyframes iconPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        .header h1 {
+            margin: 15px 0 7px;
+
+            font-size: 30px;
+            font-weight: 800;
+
+            background: linear-gradient(
+                90deg,
+                #0066ff,
+                #00a6c7
+            );
+
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            margin: 0;
+            color: #667085;
+        }
+
+        /* ===============================================
+           REGISTERED VOTER INFORMATION
+           =============================================== */
+
+        .voter-information {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+
+            margin-bottom: 22px;
+        }
+
+        .information-box {
+            padding: 14px;
+
+            text-align: center;
+
+            border: 1px solid #cce4f4;
+            border-radius: 13px;
+
+            background: linear-gradient(
+                135deg,
+                #f2f9ff,
+                #ecfbff
+            );
+        }
+
+        .information-box span {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #667085;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .information-box strong {
+            color: #0b4f6c;
+            font-size: 14px;
+
+            overflow-wrap: anywhere;
+        }
+
+        /* ===============================================
+           ELECTION STATUS
+           =============================================== */
+
+        .election-status {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 9px;
+
+            margin-bottom: 22px;
+        }
+
+        .status-badge {
+            padding: 7px 12px;
+
+            border-radius: 30px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-active {
+            color: #067647;
+            background: #dcfae6;
+        }
+
+        .status-inactive {
+            color: #b42318;
+            background: #fee4e2;
+        }
+
+        /* ===============================================
+           FORM
+           =============================================== */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #17324d;
+            font-weight: 700;
+        }
+
+        .form-select {
+            width: 100%;
+            min-height: 52px;
+
+            padding: 12px 15px;
+
+            color: #172033;
+            font-family: inherit;
+            font-size: 15px;
+
+            border: 2px solid #e1e8f0;
+            border-radius: 12px;
+
+            background-color: white;
+
+            outline: none;
+
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: #0072ff;
+
+            box-shadow: 0 0 0 4px rgba(0, 114, 255, 0.12);
+
+            transform: translateY(-2px);
+        }
+
+        .form-select:disabled {
+            color: #667085;
+            background-color: #eef2f6;
+
+            cursor: not-allowed;
+        }
+
+        .state-note {
+            margin-top: 8px;
+            padding: 10px 12px;
+
+            color: #075985;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.5;
+
+            border: 1px solid #c7e7ff;
+            border-radius: 10px;
+
+            background: #eef8ff;
+        }
+
+        .party-info,
+        .election-info {
+            display: none;
+
+            margin-top: 8px;
+
+            color: #087e8b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .selection-note {
+            margin-top: 6px;
+
+            color: #667085;
+            font-size: 12px;
+        }
+
+        /* ===============================================
+           MESSAGE
+           =============================================== */
+
+        .message {
+            margin: 15px 0;
+            padding: 12px;
+
+            color: #dc3545;
+            font-weight: 600;
+            text-align: center;
+
+            border: 1px solid #ffcaca;
+            border-radius: 10px;
+
+            background: #fff0f0;
+        }
+
+        /* ===============================================
+           SUBMIT BUTTON
+           =============================================== */
+
+        .submit-btn {
+            width: 100%;
+            min-height: 55px;
+
+            color: white;
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+
+            border: none;
+            border-radius: 14px;
+
+            background: linear-gradient(
+                90deg,
+                #0066ff,
+                #00a6c7
+            );
+
+            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.3);
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+
+            box-shadow: 0 15px 30px rgba(0, 114, 255, 0.4);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        /* ===============================================
+           MOBILE RESPONSIVE
+           =============================================== */
+
+        @media (max-width: 650px) {
+
+            body {
+                padding: 85px 10px 25px;
+            }
+
+            .top-actions {
+                top: 12px;
+                right: 10px;
+                left: 10px;
+
+                justify-content: flex-end;
+            }
+
+            .nav-btn {
+                padding: 9px 13px;
+                font-size: 12px;
+            }
+
+            .voting-card {
+                padding: 25px 19px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .voter-information {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Dashboard and logout -->
+    <div class="top-actions">
+
+        <a th:href="@{/voter/dashboard}"
+           class="nav-btn dashboard-btn">
+
+            🏠 Dashboard
+
+        </a>
+
+        <form th:action="@{/voter/logout}"
+              method="post">
+
+            <button type="submit"
+                    class="nav-btn logout-btn">
+
+                Logout
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- Main voting card -->
+    <main class="voting-card">
+
+        <!-- Header -->
+        <div class="header">
+
+            <div class="vote-icon">
+                🗳️
+            </div>
+
+            <h1>Online Voting System</h1>
+
+            <p>
+                Cast your vote securely and easily
+            </p>
+
+        </div>
+
+        <!-- Registered voter details -->
+        <section class="voter-information">
+
+            <div class="information-box">
+
+                <span>Voter Name</span>
+
+                <strong th:text="${account.name}">
+                    Voter Name
+                </strong>
+
+            </div>
+
+            <div class="information-box">
+
+                <span>Permanent Voter ID</span>
+
+                <strong th:text="${account.voterId}">
+                    VOTER-ID
+                </strong>
+
+            </div>
+
+            <div class="information-box">
+
+                <span>Age</span>
+
+                <strong th:text="${voter.age}">
+                    18
+                </strong>
+
+            </div>
+
+        </section>
+
+        <!-- Current election status -->
+        <section class="election-status">
+
+            <span class="status-badge status-active"
+                  th:if="${assemblyActive}">
+                Assembly Active
+            </span>
+
+            <span class="status-badge status-inactive"
+                  th:if="${not assemblyActive}">
+                Assembly Inactive
+            </span>
+
+            <span class="status-badge status-active"
+                  th:if="${lokSabhaActive}">
+                Lok Sabha Active
+            </span>
+
+            <span class="status-badge status-inactive"
+                  th:if="${not lokSabhaActive}">
+                Lok Sabha Inactive
+            </span>
+
+        </section>
+
+        <!-- Voting form -->
+        <form th:action="@{/vote}"
+              method="post"
+              th:object="${voter}">
+
+            <!-- State -->
+            <div class="form-group">
+
+                <label for="state"
+                       class="form-label">
+
+                    📍 Select State / UT
+
+                </label>
+
+                <select id="state"
+                        class="form-select"
+                        th:field="*{location}"
+                        required>
+
+                    <option value="">
+                        -- Select State --
+                    </option>
+
+                    <option th:each="stateName : ${locations}"
+                            th:value="${stateName}"
+                            th:text="${stateName}">
+                    </option>
+
+                </select>
+
+                <div class="state-note">
+
+                    🔒 After your first successful vote,
+                    you must use the same state for your
+                    other election.
+
+                </div>
+
+            </div>
+
+            <!-- Election -->
+            <div class="form-group">
+
+                <label for="electionType"
+                       class="form-label">
+
+                    🗳️ Select Election Type
+
+                </label>
+
+                <select id="electionType"
+                        class="form-select"
+                        th:field="*{electionType}"
+                        required>
+
+                    <option value="">
+                        -- Choose Election Type --
+                    </option>
+
+                    <option value="Assembly Election"
+                            th:disabled="${not assemblyActive}">
+
+                        Assembly Election
+
+                    </option>
+
+                    <option value="Lok Sabha Election"
+                            th:disabled="${not lokSabhaActive}">
+
+                        Lok Sabha Election
+
+                    </option>
+
+                </select>
+
+                <div id="electionInfo"
+                     class="election-info">
+                </div>
+
+            </div>
+
+            <!-- Party -->
+            <div class="form-group">
+
+                <label for="party"
+                       class="form-label">
+
+                    🏛️ Select Party
+
+                </label>
+
+                <select id="party"
+                        class="form-select"
+                        th:field="*{party}"
+                        required
+                        disabled>
+
+                    <option value="">
+                        -- Select Election and State First --
+                    </option>
+
+                </select>
+
+                <div id="partyInfo"
+                     class="party-info">
+                </div>
+
+                <div class="selection-note">
+
+                    Party options change according to the
+                    selected election and state.
+
+                </div>
+
+            </div>
+
+            <!-- Error message -->
+            <p class="message"
+               th:if="${msg}"
+               th:text="${msg}">
+            </p>
+
+            <!-- Submit button -->
+            <button type="submit"
+                    class="submit-btn"
+                    th:disabled="${not assemblyActive and not lokSabhaActive}">
+
+                🗳️ Submit Vote Securely
+
+            </button>
+
+        </form>
+
+    </main>
+
+    <script th:inline="javascript">
+
+        const stateSelect =
+                document.getElementById("state");
+
+        const electionTypeSelect =
+                document.getElementById("electionType");
+
+        const partySelect =
+                document.getElementById("party");
+
+        const partyInfo =
+                document.getElementById("partyInfo");
+
+        const electionInfo =
+                document.getElementById("electionInfo");
+
+        /*
+         * Preserve selected party when backend returns
+         * an error to the same voting page.
+         */
+        const savedParty =
+                /*[[${voter.party}]]*/ "";
+
+        function updateElectionInformation() {
+
+            const electionType =
+                    electionTypeSelect.value;
+
+            if (electionType === "Assembly Election") {
+
+                electionInfo.textContent =
+                        "🗳️ Assembly Election selected. "
+                        + "You can vote once in this election.";
+
+                electionInfo.style.display = "block";
+
+            } else if (
+                    electionType === "Lok Sabha Election"
+            ) {
+
+                electionInfo.textContent =
+                        "🇮🇳 Lok Sabha Election selected. "
+                        + "You can vote once in this election.";
+
+                electionInfo.style.display = "block";
+
+            } else {
+
+                electionInfo.style.display = "none";
+            }
+        }
+
+        async function updateParties(
+                selectedParty = "") {
+
+            const state =
+                    stateSelect.value;
+
+            const electionType =
+                    electionTypeSelect.value;
+
+            partySelect.innerHTML = "";
+            partyInfo.style.display = "none";
+
+            if (!electionType) {
+
+                partySelect.disabled = true;
+
+                partySelect.innerHTML =
+                        '<option value="">'
+                        + '-- Select Election Type First --'
+                        + '</option>';
+
+                return;
+            }
+
+            if (!state) {
+
+                partySelect.disabled = true;
+
+                partySelect.innerHTML =
+                        '<option value="">'
+                        + '-- Select State First --'
+                        + '</option>';
+
+                return;
+            }
+
+            partySelect.disabled = true;
+
+            partySelect.innerHTML =
+                    '<option value="">'
+                    + 'Loading parties...'
+                    + '</option>';
+
+            try {
+
+                const url =
+                        "/parties-by-election?location="
+                        + encodeURIComponent(state)
+                        + "&electionType="
+                        + encodeURIComponent(electionType);
+
+                const response =
+                        await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to load parties"
+                    );
+                }
+
+                const parties =
+                        await response.json();
+
+                partySelect.innerHTML = "";
+
+                if (!parties || parties.length === 0) {
+
+                    partySelect.disabled = true;
+
+                    partySelect.innerHTML =
+                            '<option value="">'
+                            + '-- No Parties Available --'
+                            + '</option>';
+
+                    return;
+                }
+
+                partySelect.disabled = false;
+
+                const defaultOption =
+                        document.createElement("option");
+
+                defaultOption.value = "";
+                defaultOption.textContent =
+                        "-- Choose Party --";
+
+                partySelect.appendChild(
+                        defaultOption
+                );
+
+                parties.forEach(function (partyName) {
+
+                    const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                    option.value = partyName;
+                    option.textContent = partyName;
+
+                    if (partyName === selectedParty) {
+                        option.selected = true;
+                    }
+
+                    partySelect.appendChild(option);
+                });
+
+                partyInfo.textContent =
+                        parties.length
+                        + " parties available for "
+                        + state
+                        + " - "
+                        + electionType;
+
+                partyInfo.style.display = "block";
+
+            } catch (error) {
+
+                console.error(
+                    "Party loading error:",
+                    error
+                );
+
+                partySelect.disabled = true;
+
+                partySelect.innerHTML =
+                        '<option value="">'
+                        + '-- Unable to Load Parties --'
+                        + '</option>';
+            }
+        }
+
+        electionTypeSelect.addEventListener(
+            "change",
+            function () {
+
+                updateElectionInformation();
+                updateParties();
+            }
+        );
+
+        stateSelect.addEventListener(
+            "change",
+            function () {
+
+                updateParties();
+            }
+        );
+
+        document
+            .querySelector("form[method='post'][action$='/vote']")
+            .addEventListener(
+                "submit",
+                function (event) {
+
+                    if (!stateSelect.value) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Please select your State / UT."
+                        );
+
+                        stateSelect.focus();
+
+                        return;
+                    }
+
+                    if (!electionTypeSelect.value) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Please select an Election Type."
+                        );
+
+                        electionTypeSelect.focus();
+
+                        return;
+                    }
+
+                    if (!partySelect.value) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Please select a Party."
+                        );
+
+                        partySelect.focus();
+                    }
+                }
+            );
+
+        window.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                updateElectionInformation();
+
+                if (
+                    stateSelect.value &&
+                    electionTypeSelect.value
+                ) {
+
+                    updateParties(savedParty);
+                }
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Create New Form</title>
+	<style>
+		body {
+			font-family: Arial;
+			padding: 20px;
+		}
+
+		input,
+		select,
+		button {
+			margin: 6px 0;
+			padding: 6px;
+		}
+
+		.q-box {
+			border: 1px solid #ccc;
+			padding: 10px;
+			margin: 10px 0;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h2>Create New Form</h2>
+
+	<label>Form Name</label><br>
+	<input id="formName"><br>
+
+	<label>Description</label><br>
+	<input id="formDesc"><br><br>
+
+	<h3>Add Question</h3>
+
+	<label>Question Label</label><br>
+	<input id="qLabel"><br>
+
+	<label>Question Type</label><br>
+	<select id="qType">
+		<option>TEXT</option>
+		<option>MCQ</option>
+		<option>DROPDOWN</option>
+		<option>CHECKBOX</option>
+		<option>FILE</option>
+	</select><br>
+
+	<label>Options (comma separated for MCQ / Dropdown)</label><br>
+	<input id="qOptions"><br>
+
+	<label>
+		<input type="checkbox" id="qRequired"> Required
+	</label><br>
+
+	<button onclick="addQuestion()">Add Question</button>
+
+	<hr>
+
+	<h3>Questions</h3>
+	<div id="questions"></div>
+
+	<button onclick="submitForm()">Create Form</button>
+
+	<script src="create-form.js"></script>
+</body>
+
+</html>

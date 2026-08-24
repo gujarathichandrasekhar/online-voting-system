@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Search Voter | Online Voting System</title>
+
+    <!-- Google Font -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        /* =========================
+           RESET
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =========================
+           BODY
+        ========================= */
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            padding: 40px 20px;
+
+            font-family: "Poppins", sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #312e81,
+                #6d28d9,
+                #0369a1
+            );
+
+            position: relative;
+
+            overflow-x: hidden;
+        }
+
+
+        /* =========================
+           ANIMATED BACKGROUND
+        ========================= */
+
+        .circle {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            z-index: 0;
+
+            filter: blur(2px);
+        }
+
+
+        .circle-one {
+
+            width: 320px;
+
+            height: 320px;
+
+            top: -120px;
+
+            left: -100px;
+
+            background: rgba(139, 92, 246, 0.25);
+
+            animation: moveOne 8s ease-in-out infinite;
+        }
+
+
+        .circle-two {
+
+            width: 400px;
+
+            height: 400px;
+
+            bottom: -180px;
+
+            right: -130px;
+
+            background: rgba(6, 182, 212, 0.22);
+
+            animation: moveTwo 10s ease-in-out infinite;
+        }
+
+
+        .circle-three {
+
+            width: 160px;
+
+            height: 160px;
+
+            top: 20%;
+
+            right: 12%;
+
+            background: rgba(59, 130, 246, 0.18);
+
+            animation: moveThree 6s ease-in-out infinite;
+        }
+
+
+        @keyframes moveOne {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(50px, 40px);
+            }
+        }
+
+
+        @keyframes moveTwo {
+
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-45px, -40px);
+            }
+        }
+
+
+        @keyframes moveThree {
+
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.12);
+            }
+        }
+
+
+        /* =========================
+           MAIN CARD
+        ========================= */
+
+        .search-card {
+
+            width: 100%;
+
+            max-width: 600px;
+
+            padding: 38px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border-radius: 25px;
+
+            position: relative;
+
+            z-index: 2;
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.40);
+
+            animation: cardEnter 0.9s ease;
+
+            transition: all 0.4s ease;
+        }
+
+
+        .search-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 40px 90px rgba(0, 0, 0, 0.45);
+        }
+
+
+        @keyframes cardEnter {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(50px) scale(0.92);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0) scale(1);
+            }
+        }
+
+
+        /* =========================
+           ICON
+        ========================= */
+
+        .search-icon {
+
+            width: 82px;
+
+            height: 82px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 36px;
+
+            color: white;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #2563eb,
+                #06b6d4
+            );
+
+            box-shadow:
+                0 12px 30px rgba(79, 70, 229, 0.40);
+
+            animation: iconAnimation 2.5s ease-in-out infinite;
+        }
+
+
+        @keyframes iconAnimation {
+
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(5deg);
+            }
+        }
+
+
+        /* =========================
+           TITLE
+        ========================= */
+
+        h1 {
+
+            text-align: center;
+
+            color: #312e81;
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            margin-bottom: 6px;
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* =========================
+           SECTION TITLE
+        ========================= */
+
+        .section-title {
+
+            color: #312e81;
+
+            font-size: 19px;
+
+            font-weight: 700;
+
+            margin-bottom: 6px;
+        }
+
+
+        .section-subtitle {
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            margin-bottom: 22px;
+        }
+
+
+        /* =========================
+           LABEL
+        ========================= */
+
+        label {
+
+            display: block;
+
+            color: #312e81;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* =========================
+           INPUT AREA
+        ========================= */
+
+        .input-box {
+
+            position: relative;
+
+            margin-bottom: 22px;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 18px;
+
+            z-index: 2;
+
+            transition: 0.3s;
+        }
+
+
+        input,
+        select {
+
+            width: 100%;
+
+            height: 52px;
+
+            padding: 0 15px 0 48px;
+
+            border: 1.5px solid #ddd6fe;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            color: #1e1b4b;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 13px;
+
+            transition: all 0.3s ease;
+        }
+
+
+        select {
+
+            padding-left: 15px;
+
+            cursor: pointer;
+        }
+
+
+        input::placeholder {
+
+            color: #94a3b8;
+        }
+
+
+        input:hover,
+        select:hover {
+
+            border-color: #a78bfa;
+
+            background: white;
+        }
+
+
+        input:focus,
+        select:focus {
+
+            border-color: #7c3aed;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(124, 58, 237, 0.12);
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           SEARCH BUTTON
+        ========================= */
+
+        .search-button {
+
+            width: 100%;
+
+            height: 52px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #2563eb,
+                #0891b2
+            );
+
+            background-size: 200% 200%;
+
+            color: white;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.3px;
+
+            cursor: pointer;
+
+            position: relative;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 25px rgba(79, 70, 229, 0.35);
+
+            transition: all 0.3s ease;
+
+            animation: gradientMove 5s ease infinite;
+        }
+
+
+        @keyframes gradientMove {
+
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+
+        .search-button:hover {
+
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 16px 32px rgba(79, 70, 229, 0.45);
+        }
+
+
+        .search-button:active {
+
+            transform: translateY(0);
+        }
+
+
+        /* =========================
+           DIVIDER
+        ========================= */
+
+        .divider {
+
+            height: 1px;
+
+            background: #e2e8f0;
+
+            margin: 32px 0;
+        }
+
+
+        /* =========================
+           SECURITY
+        ========================= */
+
+        .security {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 20px 12px;
+            }
+
+
+            .search-card {
+
+                padding: 28px 20px;
+
+                border-radius: 20px;
+            }
+
+
+            h1 {
+
+                font-size: 23px;
+            }
+
+
+            .search-icon {
+
+                width: 70px;
+
+                height: 70px;
+
+                font-size: 30px;
+            }
+
+
+            .section-title {
+
+                font-size: 17px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     ANIMATED BACKGROUND
+========================= -->
+
+<div class="circle circle-one"></div>
+
+<div class="circle circle-two"></div>
+
+<div class="circle circle-three"></div>
+
+
+<!-- =========================
+     MAIN CARD
+========================= -->
+
+<div class="search-card">
+
+
+    <!-- ICON -->
+
+    <div class="search-icon">
+        🔎
+    </div>
+
+
+    <!-- TITLE -->
+
+    <h1>
+        Search Voter
+    </h1>
+
+    <p class="subtitle">
+        Online Voting System
+    </p>
+
+
+    <!-- =====================================================
+         SEARCH BY VOTER ID
+    ====================================================== -->
+
+    <div class="section-title">
+
+        🪪 Search by Voter ID
+
+    </div>
+
+    <p class="section-subtitle">
+
+        Find a specific voter using their Voter ID.
+
+    </p>
+
+
+    <form action="/searchvoter" method="post">
+
+
+        <label for="voterId">
+
+            Enter Voter ID
+
+        </label>
+
+
+        <div class="input-box">
+
+
+            <input
+                    type="text"
+                    id="voterId"
+                    name="voterId"
+                    placeholder="Enter your Voter ID"
+                    autocomplete="off"
+                    required
+            >
+
+
+            <span class="input-icon">
+
+                🪪
+
+            </span>
+
+
+        </div>
+
+
+        <button
+                type="submit"
+                class="search-button">
+
+            🔍 &nbsp; Search Voter
+
+        </button>
+
+
+    </form>
+
+
+    <!-- DIVIDER -->
+
+    <div class="divider"></div>
+
+
+    <!-- =====================================================
+         SEARCH BY LOCATION + PARTY
+    ====================================================== -->
+
+    <div class="section-title">
+
+        📍 Search by Location & Party
+
+    </div>
+
+
+    <p class="section-subtitle">
+
+        Select a location and party to see the total voters
+        and voter names.
+
+    </p>
+
+
+    <form
+            action="/search-by-location-party"
+            method="get"
+    >
+
+
+        <!-- LOCATION -->
+
+        <label for="location">
+
+            📍 Select Location
+
+        </label>
+
+
+        <div class="input-box">
+
+
+            <select
+                    id="location"
+                    name="location"
+                    required
+            >
+
+                <option value="">
+                    -- Select Location --
+                </option>
+
+                <option value="Andhra Pradesh">
+                    Andhra Pradesh
+                </option>
+
+                <option value="Telangana">
+                    Telangana
+                </option>
+
+                <option value="Karnataka">
+                    Karnataka
+                </option>
+
+                <option value="Tamil Nadu">
+                    Tamil Nadu
+                </option>
+
+                <option value="Kerala">
+                    Kerala
+                </option>
+
+                <option value="Maharashtra">
+                    Maharashtra
+                </option>
+
+                <option value="Uttar Pradesh">
+                    Uttar Pradesh
+                </option>
+
+                <option value="West Bengal">
+                    West Bengal
+                </option>
+
+                <option value="Odisha">
+                    Odisha
+                </option>
+
+                <option value="Gujarat">
+                    Gujarat
+                </option>
+
+                <option value="Rajasthan">
+                    Rajasthan
+                </option>
+
+                <option value="Punjab">
+                    Punjab
+                </option>
+
+                <option value="Bihar">
+                    Bihar
+                </option>
+
+                <option value="Jharkhand">
+                    Jharkhand
+                </option>
+
+                <option value="Haryana">
+                    Haryana
+                </option>
+
+                <option value="Goa">
+                    Goa
+                </option>
+
+            </select>
+
+
+        </div>
+
+
+        <!-- PARTY -->
+
+        <label for="party">
+
+            🏛️ Select Party
+
+        </label>
+
+
+        <div class="input-box">
+
+
+            <select
+                    id="party"
+                    name="party"
+                    required
+                    disabled
+            >
+
+                <option value="">
+                    -- Select Location First --
+                </option>
+
+            </select>
+
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <button
+                type="submit"
+                class="search-button"
+                id="locationPartyButton"
+                disabled
+        >
+
+            📊 &nbsp; Search Voters
+
+        </button>
+
+
+    </form>
+
+
+    <!-- SECURITY -->
+
+    <div class="security">
+
+        🔒 Secure Voter Search • Online Voting System
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     LOCATION → PARTY JAVASCRIPT
+====================================================== -->
+
+<script>
+
+    const locationSelect =
+        document.getElementById("location");
+
+    const partySelect =
+        document.getElementById("party");
+
+    const searchButton =
+        document.getElementById("locationPartyButton");
+
+
+    /*
+     * State-wise parties
+     */
+
+    const stateParties = {
+
+        "Andhra Pradesh": [
+
+            "TDP",
+
+            "YSR Congress Party",
+
+            "Jana Sena Party",
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "CPI",
+
+            "CPI(M)"
+
+        ],
+
+
+        "Telangana": [
+
+            "Indian National Congress",
+
+            "BRS",
+
+            "BJP",
+
+            "AIMIM",
+
+            "CPI",
+
+            "CPI(M)"
+
+        ],
+
+
+        "Karnataka": [
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "JD(S)",
+
+            "Aam Aadmi Party"
+
+        ],
+
+
+        "Tamil Nadu": [
+
+            "DMK",
+
+            "AIADMK",
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "PMK",
+
+            "NTK"
+
+        ],
+
+
+        "Kerala": [
+
+            "CPI(M)",
+
+            "Indian National Congress",
+
+            "CPI",
+
+            "BJP",
+
+            "IUML"
+
+        ],
+
+
+        "Maharashtra": [
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "Shiv Sena",
+
+            "NCP",
+
+            "Shiv Sena (UBT)",
+
+            "NCP (Sharadchandra Pawar)",
+
+            "MNS"
+
+        ],
+
+
+        "Uttar Pradesh": [
+
+            "BJP",
+
+            "Samajwadi Party",
+
+            "Indian National Congress",
+
+            "BSP",
+
+            "RLD"
+
+        ],
+
+
+        "West Bengal": [
+
+            "AITC",
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "CPI(M)"
+
+        ],
+
+
+        "Odisha": [
+
+            "BJP",
+
+            "BJD",
+
+            "Indian National Congress"
+
+        ],
+
+
+        "Gujarat": [
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "Aam Aadmi Party"
+
+        ],
+
+
+        "Rajasthan": [
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "BSP",
+
+            "RLP"
+
+        ],
+
+
+        "Punjab": [
+
+            "Aam Aadmi Party",
+
+            "Indian National Congress",
+
+            "BJP",
+
+            "Shiromani Akali Dal"
+
+        ],
+
+
+        "Bihar": [
+
+            "BJP",
+
+            "RJD",
+
+            "JD(U)",
+
+            "Indian National Congress",
+
+            "LJP",
+
+            "CPI",
+
+            "CPI(M)"
+
+        ],
+
+
+        "Jharkhand": [
+
+            "BJP",
+
+            "JMM",
+
+            "Indian National Congress",
+
+            "AJSU Party"
+
+        ],
+
+
+        "Haryana": [
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "AAP",
+
+            "INLD",
+
+            "JJP"
+
+        ],
+
+
+        "Goa": [
+
+            "BJP",
+
+            "Indian National Congress",
+
+            "Aam Aadmi Party",
+
+            "Goa Forward Party"
+
+        ]
+
+    };
+
+
+    /*
+     * When location changes
+     */
+
+    locationSelect.addEventListener(
+        "change",
+        function () {
+
+            const selectedLocation =
+                this.value;
+
+
+            // Clear party dropdown
+
+            partySelect.innerHTML = "";
+
+
+            // No location selected
+
+            if (!selectedLocation) {
+
+                partySelect.disabled = true;
+
+                searchButton.disabled = true;
+
+
+                const option =
+                    document.createElement("option");
+
+                option.value = "";
+
+                option.textContent =
+                    "-- Select Location First --";
+
+                partySelect.appendChild(option);
+
+                return;
+            }
+
+
+            // Enable party dropdown
+
+            partySelect.disabled = false;
+
+
+            // Default option
+
+            const defaultOption =
+                document.createElement("option");
+
+            defaultOption.value = "";
+
+            defaultOption.textContent =
+                "-- Select Party --";
+
+            partySelect.appendChild(defaultOption);
+
+
+            // Get parties
+
+            const parties =
+                stateParties[selectedLocation];
+
+
+            // Add parties
+
+            parties.forEach(
+                function (party) {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = party;
+
+                    option.textContent = party;
+
+                    partySelect.appendChild(option);
+
+                }
+            );
+
+
+            searchButton.disabled = true;
+
+        }
+    );
+
+
+    /*
+     * Enable search button after party selection
+     */
+
+    partySelect.addEventListener(
+        "change",
+        function () {
+
+            if (this.value) {
+
+                searchButton.disabled = false;
+
+            } else {
+
+                searchButton.disabled = true;
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
