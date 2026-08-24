@@ -67,6 +67,16 @@ mvn spring-boot:run
 http://localhost:5555
 ```
 
+## Screenshots
+
+### Voting Page
+
+![Voting Page](screenshots/voting-page.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
 ## Author
 
 Gujarathi ChandraSekhar
